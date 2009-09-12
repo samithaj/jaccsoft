@@ -44,15 +44,15 @@ public class TransactionEntry extends BaseModel {
 	return accountBalance;
     }
 
-    /*void setTransaction(Transaction transaction) {
+    void setTransaction(Transaction transaction) {
 	this.transaction = transaction;
-    }*/
+    }
 
-    protected void setTransferAccount(Account transferAccount) {
+    void setTransferAccount(Account transferAccount) {
 	this.transferAccount = transferAccount;
     }
 
-    protected void setAccountBalance(double accountBalance) {
+    void setAccountBalance(double accountBalance) {
 	this.accountBalance = accountBalance;
     }
 

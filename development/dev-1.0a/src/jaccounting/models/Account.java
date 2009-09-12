@@ -23,6 +23,7 @@ public abstract class Account extends BaseModel {
 
 	ASSET, LIABILITY, EXPENSE, REVENUE, EQUITY
     }
+
     protected List<TransactionEntry> entries;
     protected int number;
     protected String name;
@@ -37,7 +38,7 @@ public abstract class Account extends BaseModel {
 
     public Account(int number, String name, String description,
 	    double balance, Type type, boolean allowTransactions) {
-	List<TransactionEntry> vEntries = new ArrayList();
+	List<TransactionEntry> vEntries = new ArrayList<TransactionEntry>();
 	this.initProperties(number, name, description, balance, type, allowTransactions, vEntries);
     }
 
@@ -112,8 +113,8 @@ public abstract class Account extends BaseModel {
 		rAccount = new RevenueAccount();
 		break;
 	}
-	rAccount.initProperties(number, name, description, balance, type, allowTransactions, entries);
 	if (rAccount == null) throw new GenericException(ErrorCode.INVALID_ACCOUNT_TYPE);
+	rAccount.initProperties(number, name, description, balance, type, allowTransactions, entries);
 
 	return (Account) rAccount;
     }
@@ -171,7 +172,8 @@ public abstract class Account extends BaseModel {
 	return rErrors;
     }
 
-    public void addEntry(TransactionEntry pEntry) {
+    public void addEntry(TransactionEntry pEntry) throws GenericException {
+	if (!transactionsEnabled) throw new GenericException(ErrorCode.NOT_TRANSACTIONNABLE_ACCOUNT);
 	// get the index of the first entry whose date is bigger than this entry's
 	int vIndex = getIndexOfFirstEntryLaterThan(pEntry.getTransaction().getDate());
 	// insert at that index
@@ -219,7 +221,8 @@ public abstract class Account extends BaseModel {
 
     protected abstract void applyCredit(double pAmount);
 
-    public void removeEntry(TransactionEntry pEntry) {
+    public void removeEntry(TransactionEntry pEntry) throws GenericException {
+	if (!transactionsEnabled) throw new GenericException(ErrorCode.NOT_TRANSACTIONNABLE_ACCOUNT);
 	int vIndex = entries.indexOf(pEntry);
 	if (entries.remove(pEntry)) {
 	    if (vIndex > 0) vIndex--;

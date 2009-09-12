@@ -51,12 +51,12 @@ public class PersistenceHandler {
     }
 
     private void reset() {
-	accountIds = new HashMap();
-	transactionIds = new HashMap();
-	transactionEntryIds = new HashMap();
-	idAccounts = new HashMap();
-	idTransactions = new HashMap();
-	idTransactionEntries = new HashMap();
+	accountIds = new HashMap<Account, BigInteger>();
+	transactionIds = new HashMap<Transaction, BigInteger>();
+	transactionEntryIds = new HashMap<TransactionEntry, BigInteger>();
+	idAccounts = new HashMap<BigInteger, Account>();
+	idTransactions = new HashMap<BigInteger, Transaction>();
+	idTransactionEntries = new HashMap<BigInteger, TransactionEntry>();
 	lastAccountId = BigInteger.ZERO;
 	lastTransactionId = BigInteger.ZERO;
 	lastTransactionEntryId = BigInteger.ZERO;

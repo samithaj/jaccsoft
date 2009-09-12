@@ -19,12 +19,10 @@ public class LiabilityAccount extends Account {
         super(number, name, description, balance, Type.LIABILITY, allowTransactions);
     }
 
-    @Override
     protected void applyDebit(double pAmount) {
 	balance -= pAmount;
     }
 
-    @Override
     protected void applyCredit(double pAmount) {
 	balance += pAmount;
     }

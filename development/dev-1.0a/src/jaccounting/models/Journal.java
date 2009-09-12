@@ -19,7 +19,7 @@ public class Journal extends BaseModel {
     protected List<Transaction> transactions;
 
     public Journal() {
-        transactions = new ArrayList();
+        transactions = new ArrayList<Transaction>();
     }
 
     public Journal(List<Transaction> transactions) {

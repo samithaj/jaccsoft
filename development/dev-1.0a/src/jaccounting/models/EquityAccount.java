@@ -19,12 +19,10 @@ public class EquityAccount extends Account {
         super(number, name, description, balance, Type.EQUITY, allowTransactions);
     }
 
-    @Override
     protected void applyDebit(double pAmount) {
 	balance -= pAmount;
     }
 
-    @Override
     protected void applyCredit(double pAmount) {
 	balance += pAmount;
     }
