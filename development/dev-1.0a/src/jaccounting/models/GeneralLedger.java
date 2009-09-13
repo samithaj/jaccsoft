@@ -206,32 +206,49 @@ public class GeneralLedger extends BaseModel {
     public Account getAccount(String pFullName) {
 	Account rAcct;
 
-	rAcct = assetsNode.getAccount(pFullName);
+	rAcct = getAssetAccount(pFullName);
 	if (rAcct != null) {
 	    return rAcct;
 	}
 
-	rAcct = liabilitiesNode.getAccount(pFullName);
+	rAcct = getLiabilityAccount(pFullName);
 	if (rAcct != null) {
 	    return rAcct;
 	}
 
-	rAcct = equityNode.getAccount(pFullName);
+	rAcct = getEquityAccount(pFullName);
 	if (rAcct != null) {
 	    return rAcct;
 	}
 
-	rAcct = revenuesNode.getAccount(pFullName);
+	rAcct = getRevenueAccount(pFullName);
 	if (rAcct != null) {
 	    return rAcct;
 	}
 
-	rAcct = expensesNode.getAccount(pFullName);
-	if (rAcct != null) {
-	    return rAcct;
-	}
-
+	rAcct = getExpenseAccount(pFullName);
+	
 	return rAcct;
+    }
+
+    protected Account getAssetAccount(String pFullName) {
+	return assetsNode.getAccount(pFullName);
+    }
+
+    protected Account getLiabilityAccount(String pFullName) {
+	return liabilitiesNode.getAccount(pFullName);
+    }
+
+    protected Account getEquityAccount(String pFullName) {
+	return equityNode.getAccount(pFullName);
+    }
+
+    protected Account getRevenueAccount(String pFullName) {
+	return revenuesNode.getAccount(pFullName);
+    }
+
+    protected Account getExpenseAccount(String pFullName) {
+	return expensesNode.getAccount(pFullName);
     }
 
     /*public boolean canAccountHaveTransactions(int pRow) {
@@ -258,8 +275,6 @@ public class GeneralLedger extends BaseModel {
 	assetsNode.add(new AccountTreeNode(vCurrAssets));
 	liabilitiesNode.add(new AccountTreeNode(vCurrLiabilities));
 	equityNode.add(new AccountTreeNode(vInitialCapital));
-
-	//setChangedAndNotifyObservers();
     }
     
 }
