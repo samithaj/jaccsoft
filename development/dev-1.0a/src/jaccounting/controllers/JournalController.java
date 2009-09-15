@@ -7,6 +7,7 @@ package jaccounting.controllers;
 
 import jaccounting.JAccounting;
 import jaccounting.exceptions.ErrorCode;
+import jaccounting.exceptions.GenericException;
 import jaccounting.models.Account;
 import jaccounting.models.Journal;
 import jaccounting.models.Transaction;
@@ -16,6 +17,8 @@ import java.beans.PropertyChangeSupport;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JTabbedPane;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
@@ -161,8 +164,12 @@ public class JournalController extends BaseController {
 	int vRow = vView.getCurrentlySelectedRow();
 	if (vRow == -1) return;
 	Journal vModel = getModel();
-	// remove account node
-	vModel.removeTransaction(vRow);
+	try {
+	    // remove account node
+	    vModel.removeTransaction(vRow);
+	} catch (GenericException ex) {
+	    Logger.getLogger(JournalController.class.getName()).log(Level.SEVERE, null, ex);
+	}
      }
 
      @Action

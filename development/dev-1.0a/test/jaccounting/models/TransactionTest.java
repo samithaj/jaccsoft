@@ -5,6 +5,8 @@
 
 package jaccounting.models;
 
+import jaccounting.exceptions.ErrorCode;
+import jaccounting.exceptions.GenericException;
 import java.util.Date;
 import java.util.Map;
 import org.junit.After;
@@ -20,6 +22,8 @@ import static org.junit.Assert.*;
  */
 public class TransactionTest {
 
+    private Transaction transaction;
+
     public TransactionTest() {
     }
 
@@ -33,6 +37,9 @@ public class TransactionTest {
 
     @Before
     public void setUp() {
+	TransactionEntry de = new TransactionEntry(null, null, TransactionEntry.Type.DEBIT, 0.0);
+	TransactionEntry ce = new TransactionEntry(null, null, TransactionEntry.Type.CREDIT, 0.0);
+	transaction = new TransactionMock(new Date(), "Sample RefNo", "Sample Memo", 0.0, de, ce);
     }
 
     @After
@@ -40,207 +47,84 @@ public class TransactionTest {
     }
 
     /**
-     * Test of createTransaction method, of class Transaction.
+     * Test of updateProperties method, of class Transaction.
      */
     @Test
-    public void testCreateTransaction() {
-	System.out.println("createTransaction");
-	Transaction expResult = null;
-	Transaction result = Transaction.createTransaction();
-	assertEquals(expResult, result);
-	// TODO review the generated test code and remove the default call to fail.
-	fail("The test case is a prototype.");
-    }
+    public void testUpdateProperties_Rejects_Negative_Amount() {
+	System.out.println("updateProperties");
+	Date date = new Date();
+	String refNo = "New Sample RefNo";
+	String memo = "New Sample Memo";
+	double amount = -2000.60;
+	Account creditAccount = new AssetAccount(-1, "Sample Asset", "", 0.0, true);
+	Account debitAccount = new ExpenseAccount(-1, "Sample Expense", "", 0.0, true);
+	
+	Map result = transaction.updateProperties(date, refNo, memo, amount, debitAccount, creditAccount);
 
-    /**
-     * Test of getAmount method, of class Transaction.
-     */
-    @Test
-    public void testGetAmount() {
-	System.out.println("getAmount");
-	Transaction instance = new Transaction();
-	double expResult = 0.0;
-	double result = instance.getAmount();
-	assertEquals(expResult, result, 0.0);
-	// TODO review the generated test code and remove the default call to fail.
-	fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getCreditEntry method, of class Transaction.
-     */
-    @Test
-    public void testGetCreditEntry() {
-	System.out.println("getCreditEntry");
-	Transaction instance = new Transaction();
-	TransactionEntry expResult = null;
-	TransactionEntry result = instance.getCreditEntry();
-	assertEquals(expResult, result);
-	// TODO review the generated test code and remove the default call to fail.
-	fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getDate method, of class Transaction.
-     */
-    @Test
-    public void testGetDate() {
-	System.out.println("getDate");
-	Transaction instance = new Transaction();
-	Date expResult = null;
-	Date result = instance.getDate();
-	assertEquals(expResult, result);
-	// TODO review the generated test code and remove the default call to fail.
-	fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getDebitEntry method, of class Transaction.
-     */
-    @Test
-    public void testGetDebitEntry() {
-	System.out.println("getDebitEntry");
-	Transaction instance = new Transaction();
-	TransactionEntry expResult = null;
-	TransactionEntry result = instance.getDebitEntry();
-	assertEquals(expResult, result);
-	// TODO review the generated test code and remove the default call to fail.
-	fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getMemo method, of class Transaction.
-     */
-    @Test
-    public void testGetMemo() {
-	System.out.println("getMemo");
-	Transaction instance = new Transaction();
-	String expResult = "";
-	String result = instance.getMemo();
-	assertEquals(expResult, result);
-	// TODO review the generated test code and remove the default call to fail.
-	fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getRefNo method, of class Transaction.
-     */
-    @Test
-    public void testGetRefNo() {
-	System.out.println("getRefNo");
-	Transaction instance = new Transaction();
-	String expResult = "";
-	String result = instance.getRefNo();
-	assertEquals(expResult, result);
-	// TODO review the generated test code and remove the default call to fail.
-	fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getCreditAccount method, of class Transaction.
-     */
-    @Test
-    public void testGetCreditAccount() {
-	System.out.println("getCreditAccount");
-	Transaction instance = new Transaction();
-	Account expResult = null;
-	Account result = instance.getCreditAccount();
-	assertEquals(expResult, result);
-	// TODO review the generated test code and remove the default call to fail.
-	fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getDebitAccount method, of class Transaction.
-     */
-    @Test
-    public void testGetDebitAccount() {
-	System.out.println("getDebitAccount");
-	Transaction instance = new Transaction();
-	Account expResult = null;
-	Account result = instance.getDebitAccount();
-	assertEquals(expResult, result);
-	// TODO review the generated test code and remove the default call to fail.
-	fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of initProperties method, of class Transaction.
-     */
-    @Test
-    public void testInitProperties() {
-	System.out.println("initProperties");
-	Date date = null;
-	String refNo = "";
-	String memo = "";
-	double amount = 0.0;
-	TransactionEntry debitEntry = null;
-	TransactionEntry creditEntry = null;
-	Transaction instance = new Transaction();
-	instance.initProperties(date, refNo, memo, amount, debitEntry, creditEntry);
-	// TODO review the generated test code and remove the default call to fail.
-	fail("The test case is a prototype.");
+	assertTrue(result.containsKey("amount"));
+	assertTrue(result.containsValue(ErrorCode.NEGATIVE_TRANSACTION_AMOUNT));
+	assertEquals(1, result.size());
     }
 
     /**
      * Test of updateProperties method, of class Transaction.
      */
     @Test
-    public void testUpdateProperties() {
+    public void testUpdateProperties_Rejects_Not_Transactionnale_Debit_Account() {
 	System.out.println("updateProperties");
-	Date date = null;
-	String refNo = "";
-	String memo = "";
-	double amount = 0.0;
-	Account debitAccount = null;
-	Account creditAccount = null;
-	Transaction instance = new Transaction();
-	Map expResult = null;
-	Map result = instance.updateProperties(date, refNo, memo, amount, debitAccount, creditAccount);
-	assertEquals(expResult, result);
-	// TODO review the generated test code and remove the default call to fail.
-	fail("The test case is a prototype.");
+	Date date = new Date();
+	String refNo = "New Sample RefNo";
+	String memo = "New Sample Memo";
+	double amount = 2000.60;
+	Account creditAccount = new AssetAccount(-1, "Sample Asset", "", 0.0, true);
+	Account debitAccount = new ExpenseAccount(-1, "Sample Expense", "", 0.0, false);
+
+	Map result = transaction.updateProperties(date, refNo, memo, amount, debitAccount, creditAccount);
+
+	assertTrue(result.containsKey("debitAccount"));
+	assertTrue(result.containsValue(ErrorCode.NOT_TRANSACTIONNABLE_ACCOUNT));
+	assertEquals(1, result.size());
     }
 
     /**
-     * Test of removeEntriesFromAccounts method, of class Transaction.
+     * Test of updateProperties method, of class Transaction.
      */
     @Test
-    public void testRemoveEntriesFromAccounts() {
-	System.out.println("removeEntriesFromAccounts");
-	Transaction instance = new Transaction();
-	instance.removeEntriesFromAccounts();
-	// TODO review the generated test code and remove the default call to fail.
-	fail("The test case is a prototype.");
+    public void testUpdateProperties_Rejects_Not_Transactionnale_Credit_Account() {
+	System.out.println("updateProperties");
+	Date date = new Date();
+	String refNo = "New Sample RefNo";
+	String memo = "New Sample Memo";
+	double amount = 2000.60;
+	Account creditAccount = new AssetAccount(-1, "Sample Asset", "", 0.0, false);
+	Account debitAccount = new ExpenseAccount(-1, "Sample Expense", "", 0.0, true);
+
+	Map result = transaction.updateProperties(date, refNo, memo, amount, debitAccount, creditAccount);
+
+	assertTrue(result.containsKey("creditAccount"));
+	assertTrue(result.containsValue(ErrorCode.NOT_TRANSACTIONNABLE_ACCOUNT));
+	assertEquals(1, result.size());
     }
 
-    /**
-     * Test of addEntriesToAccounts method, of class Transaction.
-     */
-    @Test
-    public void testAddEntriesToAccounts() {
-	System.out.println("addEntriesToAccounts");
-	Transaction instance = new Transaction();
-	instance.addEntriesToAccounts();
-	// TODO review the generated test code and remove the default call to fail.
-	fail("The test case is a prototype.");
-    }
 
-    /**
-     * Test of validatePropertyValues method, of class Transaction.
-     */
-    @Test
-    public void testValidatePropertyValues() {
-	System.out.println("validatePropertyValues");
-	double amount = 0.0;
-	Account debitAccount = null;
-	Account creditAccount = null;
-	Transaction instance = new Transaction();
-	Map expResult = null;
-	Map result = instance.validatePropertyValues(amount, debitAccount, creditAccount);
-	assertEquals(expResult, result);
-	// TODO review the generated test code and remove the default call to fail.
-	fail("The test case is a prototype.");
+    public class TransactionMock extends Transaction {
+
+	public TransactionMock(Date date, String refNo, String memo, double amount, TransactionEntry debitEntry,
+			TransactionEntry creditEntry) {
+	    super(date, refNo, memo, amount, debitEntry, creditEntry);
+	}
+
+	@Override
+	public void removeEntriesFromAccounts() throws GenericException {
+	}
+
+	@Override
+	protected void addEntriesToAccounts() throws GenericException {
+	}
+
+	@Override
+	protected void setChangedAndNotifyObservers() {
+	}
     }
 
 }

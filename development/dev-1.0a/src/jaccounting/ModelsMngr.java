@@ -46,7 +46,7 @@ public class ModelsMngr {
     }
 
     public void load(String pFilename) throws IOException, JDOMException {
-	data = persister.unpersist(pFilename);
+	data = persister.unpersist(JAccounting.getApplication().getContext().getLocalStorage().openInputFile(pFilename));
 	loadedFilename = pFilename;
     }
 
@@ -56,7 +56,7 @@ public class ModelsMngr {
     }
 
     public void persit() throws IOException {
-	persister.persist(loadedFilename);
+	persister.persist(JAccounting.getApplication().getContext().getLocalStorage().openOutputFile(loadedFilename));
     }
 
     

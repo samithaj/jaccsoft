@@ -232,9 +232,8 @@ public class PersistenceHandler {
 	return rEntry;
     }
 
-    public void persist(String pFilename) throws IOException {
-	OutputStream vStream = JAccounting.getApplication().getContext().getLocalStorage().openOutputFile(pFilename);
-	XMLOutputter vOut = new XMLOutputter(Format.getPrettyFormat());
+    public void persist(OutputStream pStream) throws IOException {
+	XMLOutputter vOut = new XMLOutputter();
 	Document vDoc = new Document();
 	Element vRoot = new Element("JAccounting");
 
@@ -243,17 +242,17 @@ public class PersistenceHandler {
 	vRoot.addContent(new Element("lastAccountId").setText(lastAccountId+""));
 	vRoot.addContent(new Element("lastTransactionId").setText(lastTransactionId+""));
 	vRoot.addContent(new Element("lastTransactionEntryId").setText(lastTransactionEntryId+""));
-	vOut.output(vDoc, vStream);
-	vStream.flush();
-	vStream.close();
+	vOut.output(vDoc, pStream);
+	pStream.flush();
+	pStream.close();
+	
 	reset();
     }
 
-    public Data unpersist(String pFilename) throws IOException, JDOMException {
-	InputStream vStream =  JAccounting.getApplication().getContext().getLocalStorage().openInputFile(pFilename);
+    public Data unpersist(InputStream pStream) throws IOException, JDOMException {
 	Data rData;
 	SAXBuilder vBuilder = new SAXBuilder();
-	Document vDoc = vBuilder.build(vStream);
+	Document vDoc = vBuilder.build(pStream);
 	Element vRoot = vDoc.getRootElement();
 
 	accountElementsIterator = vRoot.getDescendants(new ElementFilter("Account"));

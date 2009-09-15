@@ -160,8 +160,12 @@ public class GeneralLedgerController extends BaseController {
 	int vRow = vView.getCurrentlySelectedRow();
 	if (vRow == -1) return;
 	GeneralLedger vModel = getModel();
-	// remove account node
-	vModel.removeAccount(vRow);
+	try {
+	    // remove account node
+	    vModel.removeAccount(vRow);
+	} catch (GenericException ex) {
+	    Logger.getLogger(GeneralLedgerController.class.getName()).log(Level.SEVERE, null, ex);
+	}
     }
 
     @Action(enabledProperty = "openAccountLedgerEnabled")

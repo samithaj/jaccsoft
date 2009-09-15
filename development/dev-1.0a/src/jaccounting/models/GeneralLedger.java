@@ -5,6 +5,7 @@
 package jaccounting.models;
 
 import jaccounting.JAccounting;
+import jaccounting.exceptions.GenericException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -143,7 +144,7 @@ public class GeneralLedger extends BaseModel {
 	}
     }
 
-    public void removeAccount(int pRow) {
+    public void removeAccount(int pRow) throws GenericException {
 	AccountTreeNode vAcctNode = getAccountNodeAtRow(pRow);
 	if (vAcctNode != null && vAcctNode.canBeRemoved()) {
 	    vAcctNode.removeFromParent();

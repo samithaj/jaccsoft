@@ -5,6 +5,7 @@
 
 package jaccounting.models;
 
+import jaccounting.exceptions.GenericException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -40,7 +41,7 @@ public class Journal extends BaseModel {
 	setChangedAndNotifyObservers();
     }
 
-    private int getIndexOfFirstTransactionLaterThan(Date pDate) {
+    protected int getIndexOfFirstTransactionLaterThan(Date pDate) {
 	int rIndex = -1;
 	int vCurrIndex = -1;
 	Transaction vTrans;
@@ -63,7 +64,7 @@ public class Journal extends BaseModel {
 	return transactions.get(pIndex);
     }
 
-    public void removeTransaction(int vRow) {
+    public void removeTransaction(int vRow) throws GenericException {
 	Transaction vTrans;
 	if ((vTrans=transactions.remove(vRow)) != null) {
 	    vTrans.removeEntriesFromAccounts();
@@ -71,9 +72,9 @@ public class Journal extends BaseModel {
 	}
     }
 
-    public void removeTransactions(List<Transaction> pTransactions) {
+    public void removeTransactions(List<Transaction> pTransactions) throws GenericException {
 	Transaction vTrans;
-	ListIterator vIt = transactions.listIterator();
+	ListIterator vIt = pTransactions.listIterator();
 
 	while (vIt.hasNext()) {
 	    vTrans = (Transaction) vIt.next();

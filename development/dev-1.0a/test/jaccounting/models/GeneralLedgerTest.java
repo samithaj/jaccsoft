@@ -59,7 +59,7 @@ public class GeneralLedgerTest {
 	rt.add(r);
 	rt.add(e);
 
-	generalLedger = new GeneralLedgerImpl(rt, a, l, r, e, c);
+	generalLedger = new GeneralLedgerMock(rt, a, l, r, e, c);
     }
 
     @After
@@ -112,7 +112,7 @@ public class GeneralLedgerTest {
      * Test of removeAccount method, of class GeneralLedger.
      */
     @Test(expected=ArrayIndexOutOfBoundsException.class)
-    public void testRemoveAccount() {
+    public void testRemoveAccount() throws Exception {
 	System.out.println("removeAccount");
 	int pRow = 10;
 	
@@ -182,9 +182,9 @@ public class GeneralLedgerTest {
     }
 
 
-    public class GeneralLedgerImpl extends GeneralLedger {
+    public class GeneralLedgerMock extends GeneralLedger {
 
-	public GeneralLedgerImpl(DefaultMutableTreeNode root, AccountTreeNode assetsNode,
+	public GeneralLedgerMock(DefaultMutableTreeNode root, AccountTreeNode assetsNode,
 		AccountTreeNode liabilitiesNode, AccountTreeNode revenuesNode,
 		AccountTreeNode expensesNode, AccountTreeNode equityNode) {
 	    super(root, assetsNode, liabilitiesNode, revenuesNode, expensesNode, equityNode);
