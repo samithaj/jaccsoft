@@ -6,7 +6,6 @@
 package jaccounting.models;
 
 import jaccounting.exceptions.ErrorCode;
-import jaccounting.exceptions.GenericException;
 import jaccounting.models.Account.Type;
 import java.util.ArrayList;
 import java.util.Date;
@@ -143,16 +142,16 @@ public class AccountTest {
     }
 
     /**
-     * Test of updateProperties method, of class Account.
+     * Test of update method, of class Account.
      */
     @Test
-    public void testUpdateProperties_Rejects_Negative_Account_Number() {
-	System.out.println("updateProperties");
+    public void testUpdate_Rejects_Negative_Account_Number() {
+	System.out.println("update");
 	int number = -101;
 	String name = "New Sample Account Name";
 	String description = "New Sample Account Description";
 
-	Map result = accountWithNoEntries.updateProperties(number, name, description);
+	Map result = accountWithNoEntries.update(number, name, description);
 
 	assertTrue(result.size() == 1);
 	assertTrue(result.containsKey("number"));
@@ -162,16 +161,16 @@ public class AccountTest {
     }
 
     /**
-     * Test of updateProperties method, of class Account.
+     * Test of update method, of class Account.
      */
     @Test
-    public void testUpdateProperties_Rejects_Empty_Account_Name() {
-	System.out.println("updateProperties");
+    public void testUpdate_Rejects_Empty_Account_Name() {
+	System.out.println("update");
 	int number = 101;
 	String name = "";
 	String description = "New Sample Account Description";
 
-	Map result = accountWithNoEntries.updateProperties(number, name, description);
+	Map result = accountWithNoEntries.update(number, name, description);
 
 	assertTrue(result.size() == 1);
 	assertTrue(result.containsKey("name"));
@@ -182,16 +181,16 @@ public class AccountTest {
     }
 
     /**
-     * Test of updateProperties method, of class Account.
+     * Test of update method, of class Account.
      */
     @Test
-    public void testUpdateProperties_Rejects_Not_Alphanumeric_Name() {
-	System.out.println("updateProperties");
+    public void testUpdate_Rejects_Not_Alphanumeric_Name() {
+	System.out.println("update");
 	int number = 101;
 	String name = "Sample.Account&Name";
 	String description = "New Sample Account Description";
 
-	Map result = accountWithNoEntries.updateProperties(number, name, description);
+	Map result = accountWithNoEntries.update(number, name, description);
 
 	assertTrue(result.size() == 1);
 	assertTrue(result.containsKey("name"));
@@ -202,16 +201,16 @@ public class AccountTest {
     }
 
     /**
-     * Test of updateProperties method, of class Account.
+     * Test of update method, of class Account.
      */
     @Test
-    public void testUpdateProperties_Accepts_Alphanumeric_Name_And_Positive_Number_And_Empty_Description() {
-	System.out.println("updateProperties");
+    public void testUpdate_Accepts_Alphanumeric_Name_And_Positive_Number_And_Empty_Description() {
+	System.out.println("update");
 	int number = 1001;
 	String name = "New Sample Account Name";
 	String description = "";
 
-	Map result = accountWithNoEntries.updateProperties(number, name, description);
+	Map result = accountWithNoEntries.update(number, name, description);
 
 	assertTrue(result.isEmpty());
 	assertTrue(accountWithNoEntries.number == number);
@@ -239,15 +238,15 @@ public class AccountTest {
 	assertEquals(-1000, assetAccountWithNoEntries.balance, 0.0);
 	assertTrue(assetAccountWithNoEntries.entries.get(0).equals(e1));
 	assertTrue(assetAccountWithNoEntries.entries.get(1).equals(e2));
-	assertEquals(1000.50, e1.accountBalance, 0.0);
-	assertEquals(-1000, e2.accountBalance, 0.0);
+	assertEquals(1000.50, e1.getAccountBalance(), 0.0);
+	assertEquals(-1000, e2.getAccountBalance(), 0.0);
     }
 
     /**
      * Test of removeEntry method, of class Account.
      */
     @Test
-    public void testRemoveEntry() throws GenericException {
+    public void testRemoveEntry() throws Exception {
 	System.out.println("removeEntry");
 	TransactionEntry e1 = new TransactionEntry(null,
 		new Transaction(new Date(), "Sample Ref No", "Sample Memo", 1000.50, null, null),
@@ -263,7 +262,7 @@ public class AccountTest {
 	assertTrue(assetAccountWithNoEntries.entries.size() == 1);
 	assertEquals(-2000.50, assetAccountWithNoEntries.balance, 0.0);
 	assertTrue(assetAccountWithNoEntries.entries.get(0).equals(e2));
-	assertEquals(-2000.50, e2.accountBalance, 0.0);
+	assertEquals(-2000.50, e2.getAccountBalance(), 0.0);
     }
 
     public class AccountImpl extends Account {

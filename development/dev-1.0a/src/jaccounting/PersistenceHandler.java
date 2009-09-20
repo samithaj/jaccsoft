@@ -19,13 +19,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.tree.DefaultMutableTreeNode;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.filter.ElementFilter;
 import org.jdom.input.SAXBuilder;
-import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
 /**
@@ -80,7 +81,7 @@ public class PersistenceHandler {
 	    boolean vStop = false;
 	    Element vEl;
 	    BigInteger vId;
-	    List<TransactionEntry> vEntries = new ArrayList();
+	    List<TransactionEntry> vEntries;
 	    ListIterator vIt;
 
 	    while (!vStop && accountElementsIterator.hasNext()) {
@@ -92,13 +93,14 @@ public class PersistenceHandler {
 		double vBalance = 0.0;
 		Account.Type vType = null;
 		boolean vTransEnabled = false;
-		Element vKids = vEl.getChild("List");
+		//Element vKids = vEl.getChild("List");
 		Element vKid;
 		String vKidName;
 		String vText;
 		TransactionEntry vEntry;
 		int vInd = 0;
 
+		vEntries = new ArrayList();
 		vIt = vEl.getChildren().listIterator();
 		while (vIt.hasNext()) {
 		    vKid = (Element)vIt.next();
@@ -116,13 +118,19 @@ public class PersistenceHandler {
 			vType = Enum.valueOf(Account.Type.class, vText);
 		    } else if (vKidName.equals("transactionsEnabled")) {
 			vTransEnabled = Boolean.parseBoolean(vText);
+		    } else if (vKidName.equals("entries")) {
+			vEntry = unserializeTransactionEntry("listEntry-"+vInd++, vKid);
+			while (vEntry != null) {
+			    vEntries.add(vEntry);
+			    vEntry = unserializeTransactionEntry("listEntry-"+vInd++, vKid);
+			}
 		    }
 		}
-		vEntry = unserializeTransactionEntry("listEntry-"+vInd++, vKids);
+		/*vEntry = unserializeTransactionEntry("listEntry-"+vInd++, vKids);
 		while (vEntry != null) {
 		    vEntries.add(vEntry);
 		    vEntry = unserializeTransactionEntry("listEntry-"+vInd++, vKids);
-		}
+		}*/
 		try {
 		    rAcct = Account.createAccount(vNumber, vName, vDescription, vBalance,
 						 vType, vEntries, vTransEnabled);
@@ -135,6 +143,33 @@ public class PersistenceHandler {
 	}
 
 	return rAcct;
+    }
+
+    private void setEntriesTransferAccount() {
+	Element vEl;
+	BigInteger vId;
+	BigInteger vAcctId;
+	TransactionEntry vEnt;
+	Account vAcct;
+
+	while (transactionEntryElementsIterator.hasNext()) {
+	    vEl = (Element) transactionEntryElementsIterator.next();
+	    vId = new BigInteger(vEl.getAttributeValue("id"));
+	    vEnt = idTransactionEntries.get(vId);
+	    if (vEnt == null) {
+		Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Failed to retrieve Transaction Entry of id " + vId);
+		continue;
+	    }
+
+	    vAcctId = new BigInteger(vEl.getChildTextTrim("ref-Account"));
+	    vAcct = idAccounts.get(vAcctId);
+	    if (vAcct == null) {
+		Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Failed to retrieve Account of id " + vAcctId);
+		continue;
+	    }
+
+	    vEnt.initTransferAccount(vAcct);
+	}
     }
 
     private BigInteger getIdOfTransaction(Transaction pVal) {
@@ -189,7 +224,7 @@ public class PersistenceHandler {
 			vCreditEntry = getTransactionEntryOfId(new BigInteger(vText));
 		    }
 		}
-		rTrans = new Transaction(vDate, vRefNo, vMemo, vAmount, vDebitEntry, vCreditEntry);
+		rTrans = Transaction.createTransaction(vDate, vRefNo, vMemo, vAmount, vDebitEntry, vCreditEntry);
 		idTransactions.put(vId, rTrans);
 		if (vId.equals(pId)) vStop = true;
 	    }
@@ -220,11 +255,12 @@ public class PersistenceHandler {
 	    while (!vStop && transactionEntryElementsIterator.hasNext()) {
 		vEl = (Element) transactionEntryElementsIterator.next();
 		vId = new BigInteger(vEl.getAttributeValue("id"));
-		rEntry = new TransactionEntry(getAccountOfId(new BigInteger(vEl.getChildTextTrim("ref-Account"))),
+		rEntry = new TransactionEntry(/*getAccountOfId(new BigInteger(vEl.getChildTextTrim("ref-Account")))*/null,
 					     null,
 					     Enum.valueOf(TransactionEntry.Type.class, vEl.getChildTextTrim("Enum")),
 					     Double.parseDouble(vEl.getChildTextTrim("double")));
 		idTransactionEntries.put(vId, rEntry);
+		transactionEntryIds.put(rEntry, vId);
 		if (vId.equals(pId)) vStop = true;
 	    }
 	}
@@ -232,16 +268,16 @@ public class PersistenceHandler {
 	return rEntry;
     }
 
-    public void persist(OutputStream pStream) throws IOException {
+    public void persist(Data pData, OutputStream pStream) throws IOException {
 	XMLOutputter vOut = new XMLOutputter();
 	Document vDoc = new Document();
 	Element vRoot = new Element("JAccounting");
 
 	vDoc.setRootElement(vRoot);
-	serializeData(ModelsMngr.getInstance().getData(), vRoot);
-	vRoot.addContent(new Element("lastAccountId").setText(lastAccountId+""));
+	serializeData(pData, vRoot);
+	/*vRoot.addContent(new Element("lastAccountId").setText(lastAccountId+""));
 	vRoot.addContent(new Element("lastTransactionId").setText(lastTransactionId+""));
-	vRoot.addContent(new Element("lastTransactionEntryId").setText(lastTransactionEntryId+""));
+	vRoot.addContent(new Element("lastTransactionEntryId").setText(lastTransactionEntryId+""));*/
 	vOut.output(vDoc, pStream);
 	pStream.flush();
 	pStream.close();
@@ -259,8 +295,9 @@ public class PersistenceHandler {
 	transactionElementsIterator = vRoot.getDescendants(new ElementFilter("Transaction"));
 	transactionEntryElementsIterator = vRoot.getDescendants(new ElementFilter("TransactionEntry"));
 	rData = unserializeData(vRoot);
+	transactionEntryElementsIterator = vRoot.getDescendants(new ElementFilter("TransactionEntry"));
+	setEntriesTransferAccount();
 	reset();
-	//Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Should unpersist now");
 
 	return rData;
     }
@@ -276,7 +313,9 @@ public class PersistenceHandler {
 
     private Data unserializeData(Element pRoot) {
 	Element vEl = pRoot.getChild("Data");
-	return new Data(unserializeJournal(vEl), unserializeGeneralLedger(vEl));
+	GeneralLedger vLedg = unserializeGeneralLedger(vEl);
+	Journal vJour = unserializeJournal(vEl);
+	return new Data(vJour, vLedg);
     }
 
     private void serializeGeneralLedger(GeneralLedger pLedger, Element pRoot) {

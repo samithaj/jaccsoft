@@ -5,19 +5,30 @@
 
 package jaccounting.models;
 
+import java.util.List;
+
 /**
  *
  * @author bouba
  */
 public class ExpenseAccount extends Account {
 
-    protected ExpenseAccount() {
-	this(-1, "", "", 0.0, true);
+    public ExpenseAccount() {
+	super();
+	type = Type.EXPENSE;
     }
 
-    protected ExpenseAccount(int number, String name, String description,
-                               double balance, boolean allowTransactions) {
-        super(number, name, description, balance, Type.EXPENSE, allowTransactions);
+    public ExpenseAccount(int number, String name, String description, double balance,
+	    boolean transactionsEnabled) {
+	super(number, name, description, balance, transactionsEnabled);
+	type = Type.EXPENSE;
+    }
+
+    public ExpenseAccount(int number, String name, String description,
+                               double balance, boolean allowTransactions,
+			       List<TransactionEntry> entries) {
+        super(number, name, description, balance, allowTransactions, entries);
+	type = Type.EXPENSE;
     }
 
     protected void applyDebit(double pAmount) {

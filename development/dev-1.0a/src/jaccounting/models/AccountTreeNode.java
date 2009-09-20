@@ -5,6 +5,8 @@
 
 package jaccounting.models;
 
+import jaccounting.JAccounting;
+import jaccounting.exceptions.NotTransactionnableAccountException;
 import java.util.Enumeration;
 import java.util.List;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -19,21 +21,25 @@ public class AccountTreeNode extends DefaultMutableTreeNode {
 	super(pAccount);
     }
 
+    boolean canBeEdited() {
+	return !isTopLevel();
+    }
+
     boolean canBeRemoved() {
-	return !this.isTopLevel();
+	return !isTopLevel();
     }
 
     boolean canHaveChildren() {
-	return !this.isRoot();
+	return !isRoot();
     }
 
     boolean isAccountGroup() {
-	if (this.isRoot()) return true;
-	return (this.getChildCount() > 0);
+	if (isRoot()) return true;
+	return (getChildCount() > 0);
     }
 
     boolean isTopLevel() {
-	return (this.getLevel() <= 1);
+	return (getLevel() <= 1);
     }
 
     void buildFullNames(List<String> pList, String pPrefix, boolean pExcludeNonTransactionnable) {
@@ -100,6 +106,19 @@ public class AccountTreeNode extends DefaultMutableTreeNode {
 
     boolean isAccountNameUniqueAmongChildren(String pName) {
 	return (getChildAccountWithName(pName) == null);
+    }
+
+    void remove() throws NotTransactionnableAccountException {
+	List<Transaction> vTransactions = ((Account)getUserObject()).getAccountTransactions();
+	Enumeration vChildren = children();
+
+	while (vChildren.hasMoreElements()) {
+	    ((AccountTreeNode) vChildren.nextElement()).remove();
+	}
+	removeFromParent();
+	if (vTransactions.size() > 0) {
+	    JAccounting.getApplication().getModelsMngr().getData().getJournal().removeTransactions(vTransactions);
+	}
     }
 
 }

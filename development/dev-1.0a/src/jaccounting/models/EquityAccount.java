@@ -5,18 +5,30 @@
 
 package jaccounting.models;
 
+import java.util.List;
+
 /**
  *
  * @author bouba
  */
 public class EquityAccount extends Account {
-    protected EquityAccount() {
-	this(-1, "", "", 0.0, true);
+
+    public EquityAccount() {
+	super();
+	type = Type.EQUITY;
     }
 
-    protected EquityAccount(int number, String name, String description,
-                               double balance, boolean allowTransactions) {
-        super(number, name, description, balance, Type.EQUITY, allowTransactions);
+    public EquityAccount(int number, String name, String description, double balance,
+	    boolean transactionsEnabled) {
+	super(number, name, description, balance, transactionsEnabled);
+	type = Type.EQUITY;
+    }
+
+    public EquityAccount(int number, String name, String description,
+                               double balance, boolean allowTransactions,
+			       List<TransactionEntry> entries) {
+        super(number, name, description, balance, allowTransactions, entries);
+	type = Type.EQUITY;
     }
 
     protected void applyDebit(double pAmount) {

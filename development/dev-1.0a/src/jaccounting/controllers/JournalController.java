@@ -34,7 +34,7 @@ public class JournalController extends BaseController {
     private boolean deleteTransactionEnabled;
 
     private JournalController() {
-	support = new PropertyChangeSupport(this);
+	super();
 	enableTransactionActions(true);
 	enableEditTransaction(false);
 	enableDeleteTransaction(false);
@@ -66,7 +66,7 @@ public class JournalController extends BaseController {
 
     protected JournalView getView() {
 	ResourceMap vRmap = JAccounting.getApplication().getContext().getResourceMap(JournalView.class);
-	JTabbedPane vTabsCont = JAccounting.getApplication().getView().getTabsContainer();
+	JTabbedPane vTabsCont = JAccounting.getApplication().getMainView().getTabsContainer();
 	int vIndex = vTabsCont.indexOfTab(vRmap.getString("title"));
 
 	if (vIndex != -1) {
@@ -77,12 +77,12 @@ public class JournalController extends BaseController {
     }
 
     protected ModifyTransactionBox getOrCreateModifyTransactionBox() {
-	ModifyTransactionBox rBox = JAccounting.getApplication().getView().getModifyTransactionBox();
+	ModifyTransactionBox rBox = JAccounting.getApplication().getMainView().getModifyTransactionBox();
 
 	if (rBox == null) {
 	    rBox = new ModifyTransactionBox(JAccounting.getApplication().getMainFrame(), this);
 	    rBox.setLocationRelativeTo(JAccounting.getApplication().getMainFrame());
-	    JAccounting.getApplication().getView().setModifyTransactionBox(rBox);
+	    JAccounting.getApplication().getMainView().setModifyTransactionBox(rBox);
 	}
 
 	return rBox;
@@ -107,7 +107,7 @@ public class JournalController extends BaseController {
 
     public void openJournal() {
 	ResourceMap vRmap = JAccounting.getApplication().getContext().getResourceMap(JournalView.class);
-	JTabbedPane vTabsCont = JAccounting.getApplication().getView().getTabsContainer();
+	JTabbedPane vTabsCont = JAccounting.getApplication().getMainView().getTabsContainer();
 	int vIndex = vTabsCont.indexOfTab(vRmap.getString("title"));
 
 	if (vIndex == -1) {
@@ -157,7 +157,7 @@ public class JournalController extends BaseController {
 	ResourceMap vRmap = JAccounting.getApplication().getContext().getResourceMap(this.getClass());
 	String vMessage = vRmap.getString("confirmActionMessages.deleteTransaction");
 	// confirm deletion
-	if (!JAccounting.getApplication().getView().showConfirmActionBox(vMessage)) {
+	if (!JAccounting.getApplication().getMainView().showConfirmActionBox(vMessage)) {
 	    return;
 	}
 	JournalView vView = getView();
@@ -197,7 +197,7 @@ public class JournalController extends BaseController {
 		vDebitAccount = getFullNameAccount((String)vBox.getDebitAccountInput().getSelectedItem());
 		vCreditAccount = getFullNameAccount((String)vBox.getCreditAccountInput().getSelectedItem());
 		// attempt to update transaction from modify box field values
-		vErrors = vTransaction.updateProperties((Date)vBox.getDateInput().getValue(),
+		vErrors = vTransaction.update((Date)vBox.getDateInput().getValue(),
 							vBox.getRefNoInput().getText(),
 							vBox.getMemoInput().getText(),
 							vAmount, vDebitAccount, vCreditAccount);

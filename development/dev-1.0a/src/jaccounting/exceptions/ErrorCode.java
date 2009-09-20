@@ -13,9 +13,6 @@ import org.jdesktop.application.ResourceMap;
  */
 public enum ErrorCode {
 
-    FILE_NOT_FOUND,
-    SAVE_FILE_ERROR,
-
     INVALID_ACCOUNT_TYPE,
     NEGATIVE_ACCOUNT_NUMBER,
     EMPTY_ACCOUNT_NAME,

@@ -7,9 +7,7 @@ package jaccounting.controllers;
 
 import jaccounting.JAccounting;
 import jaccounting.ModelsMngr;
-import java.io.File;
 import jaccounting.models.Data;
-import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
@@ -30,7 +28,7 @@ public class MainController extends BaseController implements Observer {
     private boolean closeTabEnabled;
     
     private MainController() {
-	support = new PropertyChangeSupport(this);
+	super();
 	enableMainActions(false);
     }
 
@@ -71,16 +69,16 @@ public class MainController extends BaseController implements Observer {
 	
 	if (pIndex == 0) {
 	    // hide all tools bars but the account ledger one
-	    JAccounting.getApplication().getView().getJournalToolsBar().setVisible(false);
-	    JAccounting.getApplication().getView().getGeneralLedgerToolsBar().setVisible(true);
+	    JAccounting.getApplication().getMainView().getJournalToolsBar().setVisible(false);
+	    JAccounting.getApplication().getMainView().getGeneralLedgerToolsBar().setVisible(true);
 	} else if (pIndex == 1) {
 	    // hide all but the journal tools bar
-	    JAccounting.getApplication().getView().getGeneralLedgerToolsBar().setVisible(false);
-	    JAccounting.getApplication().getView().getJournalToolsBar().setVisible(true);
+	    JAccounting.getApplication().getMainView().getGeneralLedgerToolsBar().setVisible(false);
+	    JAccounting.getApplication().getMainView().getJournalToolsBar().setVisible(true);
 	} else {
 	    // hide all tools bars
-	    JAccounting.getApplication().getView().getGeneralLedgerToolsBar().setVisible(false);
-	    JAccounting.getApplication().getView().getJournalToolsBar().setVisible(false);
+	    JAccounting.getApplication().getMainView().getGeneralLedgerToolsBar().setVisible(false);
+	    JAccounting.getApplication().getMainView().getJournalToolsBar().setVisible(false);
 	    // allow closing operation
 	    enableCloseTab(true);
 	}
@@ -90,8 +88,8 @@ public class MainController extends BaseController implements Observer {
 	// disallow closing
 	enableCloseTab(false);
 	// hide all tools bars
-	JAccounting.getApplication().getView().getGeneralLedgerToolsBar().setVisible(false);
-	JAccounting.getApplication().getView().getJournalToolsBar().setVisible(false);
+	JAccounting.getApplication().getMainView().getGeneralLedgerToolsBar().setVisible(false);
+	JAccounting.getApplication().getMainView().getJournalToolsBar().setVisible(false);
     }
 
     @Action
@@ -107,7 +105,7 @@ public class MainController extends BaseController implements Observer {
 
     @Action(enabledProperty = "closeTabEnabled")
     public void closeTab() {
-	JAccounting.getApplication().getView().closeCurrentTab();
+	JAccounting.getApplication().getMainView().closeCurrentTab();
     }
 
     private void enableMainActions(boolean b) {
@@ -148,7 +146,7 @@ public class MainController extends BaseController implements Observer {
 	@Override
         protected void succeeded(Void pvoid) {
             // reset view
-	    JAccounting.getApplication().getView().newDataLoaded();
+	    JAccounting.getApplication().getMainView().initForNewData();
 	    // observe data to enable or disable save
 	    ModelsMngr.getInstance().getData().addObserver(MainController.this);
 	    // launch default ops after a load
@@ -157,7 +155,7 @@ public class MainController extends BaseController implements Observer {
 
         @Override
         protected void failed(Throwable cause) {
-            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, cause);
+            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, "Failed to load file: " + filename, cause);
         }
     }
 
@@ -180,7 +178,7 @@ public class MainController extends BaseController implements Observer {
 
         @Override
         protected void failed(Throwable cause) {
-            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, cause);
+            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, "Failed to save to loaded file", cause);
         }
 
         /*@Override

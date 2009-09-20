@@ -5,7 +5,7 @@
 
 package jaccounting.models;
 
-import jaccounting.exceptions.GenericException;
+import jaccounting.exceptions.NotTransactionnableAccountException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -64,22 +64,22 @@ public class Journal extends BaseModel {
 	return transactions.get(pIndex);
     }
 
-    public void removeTransaction(int vRow) throws GenericException {
+    public void removeTransaction(int vRow) throws NotTransactionnableAccountException {
 	Transaction vTrans;
 	if ((vTrans=transactions.remove(vRow)) != null) {
-	    vTrans.removeEntriesFromAccounts();
+	    vTrans.unpostTransaction();
 	    setChangedAndNotifyObservers();
 	}
     }
 
-    public void removeTransactions(List<Transaction> pTransactions) throws GenericException {
+    public void removeTransactions(List<Transaction> pTransactions) throws NotTransactionnableAccountException {
 	Transaction vTrans;
 	ListIterator vIt = pTransactions.listIterator();
 
 	while (vIt.hasNext()) {
 	    vTrans = (Transaction) vIt.next();
 	    if (transactions.remove(vTrans)) {
-		vTrans.removeEntriesFromAccounts();
+		vTrans.unpostTransaction();
 	    }
 	}
 

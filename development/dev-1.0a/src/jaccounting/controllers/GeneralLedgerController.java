@@ -11,7 +11,6 @@ import jaccounting.models.Account;
 import jaccounting.models.GeneralLedger;
 import jaccounting.views.GeneralLedgerView;
 import jaccounting.views.ModifyAccountBox;
-import java.beans.PropertyChangeSupport;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -32,7 +31,7 @@ public class GeneralLedgerController extends BaseController {
     private boolean deleteAccountEnabled;
 
     private GeneralLedgerController() {
-	support = new PropertyChangeSupport(this);
+	super();
 	enableAccountActions(false);
     }
 
@@ -66,7 +65,7 @@ public class GeneralLedgerController extends BaseController {
 
     protected GeneralLedgerView getView() {
 	ResourceMap vRmap = JAccounting.getApplication().getContext().getResourceMap(GeneralLedgerView.class);
-	JTabbedPane vTabsCont = JAccounting.getApplication().getView().getTabsContainer();
+	JTabbedPane vTabsCont = JAccounting.getApplication().getMainView().getTabsContainer();
 	int vIndex = vTabsCont.indexOfTab(vRmap.getString("title"));
 
 	if (vIndex != -1) {
@@ -80,7 +79,7 @@ public class GeneralLedgerController extends BaseController {
 	ResourceMap vRmap = JAccounting.getApplication().getContext().getResourceMap(GeneralLedgerView.class);
 	GeneralLedger vModel = getModel();
 	
-	JTabbedPane vTabsCont = JAccounting.getApplication().getView().getTabsContainer();
+	JTabbedPane vTabsCont = JAccounting.getApplication().getMainView().getTabsContainer();
 	int vIndex = vTabsCont.indexOfTab(vRmap.getString("title"));
 
 	// if general ledger view does not exists create it
@@ -96,12 +95,12 @@ public class GeneralLedgerController extends BaseController {
     }
 
     protected ModifyAccountBox getOrCreateModifyAccountBox() {
-	ModifyAccountBox rBox = JAccounting.getApplication().getView().getModifyAccountBox();
+	ModifyAccountBox rBox = JAccounting.getApplication().getMainView().getModifyAccountBox();
 
 	if (rBox == null) {
 	    rBox = new ModifyAccountBox(JAccounting.getApplication().getMainFrame(), this);
 	    rBox.setLocationRelativeTo(JAccounting.getApplication().getMainFrame());
-	    JAccounting.getApplication().getView().setModifyAccountBox(rBox);
+	    JAccounting.getApplication().getMainView().setModifyAccountBox(rBox);
 	}
 
 	return rBox;
@@ -152,7 +151,7 @@ public class GeneralLedgerController extends BaseController {
 	ResourceMap vRmap = JAccounting.getApplication().getContext().getResourceMap(this.getClass());
 	String vMessage = vRmap.getString("confirmActionMessages.deleteAccount");
 	// confirm deletion
-	if (!JAccounting.getApplication().getView().showConfirmActionBox(vMessage)) {
+	if (!JAccounting.getApplication().getMainView().showConfirmActionBox(vMessage)) {
 	    return;
 	}
 	GeneralLedgerView vView = getView();
@@ -180,7 +179,7 @@ public class GeneralLedgerController extends BaseController {
 
     @Action
     public void modifyAccount() {
-	ModifyAccountBox vBox = JAccounting.getApplication().getView().getModifyAccountBox();
+	ModifyAccountBox vBox = JAccounting.getApplication().getMainView().getModifyAccountBox();
 
 	if (vBox != null) {
 	    boolean vIsNew = vBox.getIsNew();
@@ -201,7 +200,7 @@ public class GeneralLedgerController extends BaseController {
 
 	    if (vErrors.isEmpty()) {
 		// attempt to update account from modify box field values
-		vErrors = vAcct.updateProperties(vNumber, vBox.getNameTextField().getText(),
+		vErrors = vAcct.update(vNumber, vBox.getNameTextField().getText(),
 			vBox.getDescriptionTextField().getText());
 	    }
 
@@ -235,7 +234,11 @@ public class GeneralLedgerController extends BaseController {
 	    // enable actions
 	    enableAccountActions(true);
 	    GeneralLedger vModel = getModel();
-	    // disable some deletion for special accounts
+	    // disable edit for top nodes
+	    if (!vModel.canAccountBeEdited(pRow)) {
+		enableEditAccount(false);
+	    }
+	    // disable deletion for special accounts
 	    if (!vModel.canAccountBeRemoved(pRow)) {
 		enableDeleteAccount(false);
 	    }
@@ -252,12 +255,16 @@ public class GeneralLedgerController extends BaseController {
     }
 
     protected void enableAccountActions(boolean pVal) {
-	openEditAccountBoxEnabled = pVal;
-	support.firePropertyChange("openEditAccountBoxEnabled", !pVal, pVal);
 	openNewAccountBoxEnabled = pVal;
 	support.firePropertyChange("openNewAccountBoxEnabled", !pVal, pVal);
+	enableEditAccount(pVal);
 	enableOpenAccountLedger(pVal);
 	enableDeleteAccount(pVal);
+    }
+
+    protected void enableEditAccount(boolean pVal) {
+	openEditAccountBoxEnabled = pVal;
+	support.firePropertyChange("openEditAccountBoxEnabled", !pVal, pVal);
     }
 
     protected void enableDeleteAccount(boolean pVal) {

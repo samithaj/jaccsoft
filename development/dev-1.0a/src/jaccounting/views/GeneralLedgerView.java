@@ -14,6 +14,8 @@ import java.awt.GridLayout;
 import java.util.Enumeration;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -26,6 +28,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TreeExpansionEvent;
+import javax.swing.event.TreeExpansionListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.TreeWillExpandListener;
@@ -114,7 +117,7 @@ public class GeneralLedgerView extends JPanel implements Observer {
 	return rRoot;
     }
 
-    private ListModel buildAccountDescriptionsList() {
+    private DefaultListModel buildAccountDescriptionsList() {
 	Enumeration vEnum;
 	Account vAcct;
 	DefaultMutableTreeNode vNode;
@@ -132,7 +135,7 @@ public class GeneralLedgerView extends JPanel implements Observer {
 	return rList;
     }
 
-    private ListModel buildAccountBalancesList() {
+    private DefaultListModel buildAccountBalancesList() {
 	Enumeration vEnum;
 	Account vAcct;
 	DefaultMutableTreeNode vNode;
@@ -144,7 +147,7 @@ public class GeneralLedgerView extends JPanel implements Observer {
 	while (vEnum.hasMoreElements()) {
 	    vNode = (DefaultMutableTreeNode) vEnum.nextElement();
 	    vAcct = (Account) vNode.getUserObject();
-	    rList.addElement(vAcct.getBalance());
+	    rList.addElement(String.valueOf(vAcct.getBalance()));
 	}
 
 	return rList;
@@ -177,7 +180,7 @@ public class GeneralLedgerView extends JPanel implements Observer {
 	}
 
 	if (pNew != null) {
-	    int vRow = accountNamesView.getRowForPath(pNew);
+	    int vRow = accountNamesView.getAbsoluteRowForPath(pNew);
 	    selectAccountMetaDatasRow(vRow, -1);
 	    controller.accountSelected(vRow);
 	} else if (pOld != null) {
@@ -200,10 +203,12 @@ public class GeneralLedgerView extends JPanel implements Observer {
 
 	int vNew = pNew;
 	if (pNew != -1) {
-	    if (pColIndex == 0) {
-		vNew = accountDescriptionsView.getSelectedIndex();
-	    } else if (pColIndex == 1) {
-		vNew = accountBalancesView.getSelectedIndex();
+	    synchronized (this) {
+		if (pColIndex == 0) {
+		    vNew = accountDescriptionsView.getSelectedIndex();
+		} else if (pColIndex == 1) {
+		    vNew = accountBalancesView.getSelectedIndex();
+		}
 	    }
 
 	    selectAccountNamesRow(vNew);
@@ -216,7 +221,7 @@ public class GeneralLedgerView extends JPanel implements Observer {
 	}
     }
 
-    private void selectAccountMetaDatasRow(int pRow, int pExceptCol) {
+    private synchronized void selectAccountMetaDatasRow(int pRow, int pExceptCol) {
 	if (pExceptCol != 0) {
 	    if (pRow != -1) {
 		accountDescriptionsView.setSelectedIndex(pRow);
@@ -234,18 +239,12 @@ public class GeneralLedgerView extends JPanel implements Observer {
 	}
     }
 
-    private void selectAccountNamesRow(int pRow) {
+    private synchronized void selectAccountNamesRow(int pRow) {
 	accountNamesView.setSelectionRow(pRow);
     }
 
-    private void accountNamesNodeWillExpand(TreePath pPath) {
-	int vCt = accountNamesView.getModel().getChildCount(pPath.getLastPathComponent());
-	int vRow = accountNamesView.getRowForPath(pPath);
-
-	for (int i = 1; i <= vCt; i++) {
-	    accountDescriptionsView.fakeShowElementAt(vRow + i);
-	    accountBalancesView.fakeShowElementAt(vRow + i);
-	}
+    private void accountNamesNodeExpanded(TreePath pPath) {
+	updateVisibleMetaDatasRow(pPath);
 
 	if (accountNamesView.isSelectionEmpty()) {
 	    selectAccountMetaDatasRow(-1, -1);
@@ -254,21 +253,44 @@ public class GeneralLedgerView extends JPanel implements Observer {
     }
 
     private void accountNamesNodeWillCollapse(TreePath pPath) {
-	int vCt = accountNamesView.getModel().getChildCount(pPath.getLastPathComponent());
-	int vRow = accountNamesView.getRowForPath(pPath);
+	updateInVisibleMetaDatasRow(pPath);
+    }
 
-	for (int i = 1; i <= vCt; i++) {
-	    accountDescriptionsView.fakeHideElementAt(vRow + i);
-	    accountBalancesView.fakeHideElementAt(vRow + i);
-	}
-
+    private void accountNamesNodeCollapsed(TreePath pPath) {
 	if (accountNamesView.isSelectionEmpty()) {
 	    selectAccountMetaDatasRow(-1, -1);
 	    controller.noAccountSelected();
 	}
     }
 
-    public int getCurrentlySelectedRow() {
+    private void updateInVisibleMetaDatasRow(TreePath pPath) {
+	int vRow = accountNamesView.getRowForPath(pPath)+1;
+	TreePath vPath;
+	int vRowToHide = vRow;
+
+	while ((vPath = accountNamesView.getPathForRow(vRow)) !=  null
+		&& pPath.isDescendant(vPath)) {
+	    accountDescriptionsView.fakeHideElementAt(vRowToHide);
+	    accountBalancesView.fakeHideElementAt(vRowToHide);
+	    vRow++;
+	}
+    }
+
+    private void updateVisibleMetaDatasRow(TreePath pPath) {
+	int vRow = accountNamesView.getRowForPath(pPath)+1;
+	TreePath vPath;
+	int vRowToShow;
+
+	while ((vPath = accountNamesView.getPathForRow(vRow)) !=  null
+		&& pPath.isDescendant(vPath)) {
+	    vRowToShow = accountNamesView.getAbsoluteRowForPath(vPath);
+	    accountDescriptionsView.fakeShowElementAt(vRow, vRowToShow);
+	    accountBalancesView.fakeShowElementAt(vRow, vRowToShow);
+	    vRow++;
+	}
+    }
+
+    public synchronized int getCurrentlySelectedRow() {
 	int rRow = -1;
 	int[] vSelRows = accountNamesView.getSelectionRows();
 
@@ -304,7 +326,7 @@ public class GeneralLedgerView extends JPanel implements Observer {
 	selectAccountAtRow(vRow);
     }
 
-    private class AccountNamesView extends JTree implements TreeSelectionListener, TreeWillExpandListener {
+    private class AccountNamesView extends JTree implements TreeSelectionListener, TreeExpansionListener, TreeWillExpandListener {
 
 	public AccountNamesView(TreeNode pAccountNames) {
 	    super(pAccountNames);
@@ -316,6 +338,7 @@ public class GeneralLedgerView extends JPanel implements Observer {
 
 	public void addDefaultListeners() {
 	    addTreeSelectionListener(this);
+	    addTreeExpansionListener(this);
 	    addTreeWillExpandListener(this);
 	}
 
@@ -329,8 +352,36 @@ public class GeneralLedgerView extends JPanel implements Observer {
 	    }
 	}
 
+	public int getAbsoluteRowForPath(TreePath path) {
+	    int rRow = -1;
+	    int vInd;
+	    String vPathName = path.toString();
+	    
+	    vPathName = vPathName.replaceAll("^\\[", "");
+	    vPathName = vPathName.replaceAll("\\]$", "");
+	    vPathName = vPathName.replaceAll(",\\s{1}", ".");
+	    vInd = vPathName.indexOf('.');
+	    if (vInd > 0) {
+		vPathName = vPathName.substring(vInd+1);
+		if (vPathName.length() > 0) {
+		    rRow = mModel.getRowOfAccount(mModel.getAccount(vPathName));
+		}
+	    } else rRow = 0;
+
+	    //Logger.getAnonymousLogger().log(Level.INFO, path.toString());
+	    //Logger.getAnonymousLogger().log(Level.INFO, vPathName);
+	    return rRow;
+	}
+
+	public void treeExpanded(TreeExpansionEvent event) {
+	    accountNamesNodeExpanded(event.getPath());
+	}
+
+	public void treeCollapsed(TreeExpansionEvent event) {
+	    accountNamesNodeCollapsed(event.getPath());
+	}
+
 	public void treeWillExpand(TreeExpansionEvent event) throws ExpandVetoException {
-	    accountNamesNodeWillExpand(event.getPath());
 	}
 
 	public void treeWillCollapse(TreeExpansionEvent event) throws ExpandVetoException {
@@ -405,9 +456,9 @@ public class GeneralLedgerView extends JPanel implements Observer {
     private class AccountMetaDatasView extends JList implements ListSelectionListener {
 
 	private int colIndex;
-	private ListModel nonMutableModel;
+	private DefaultListModel nonMutableModel;
 
-	public AccountMetaDatasView(int pColIndex, ListModel pMetaDatas, ListModel pNonMutableModel) {
+	public AccountMetaDatasView(int pColIndex, DefaultListModel pMetaDatas, DefaultListModel pNonMutableModel) {
 	    super(pMetaDatas);
 	    addListSelectionListener(this);
 	    setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -420,14 +471,18 @@ public class GeneralLedgerView extends JPanel implements Observer {
 	    accountMetaDatasSelectionChanged(colIndex, e.getLastIndex());
 	}
 
-	public void fakeHideElementAt(int pRow) {
+	public synchronized void fakeHideElementAt(int pRow) {
 	    DefaultListModel vData = (DefaultListModel) getModel();
 	    vData.remove(pRow);
+	    //String vVal = (String)vData.get(pRow);
+	    //vVal = "";
 	}
 
-	public void fakeShowElementAt(int pRow) {
+	public synchronized void fakeShowElementAt(int pRow, int pRealPos) {
 	    DefaultListModel vData = (DefaultListModel) getModel();
-	    vData.insertElementAt(nonMutableModel.getElementAt(pRow), pRow);
+	    vData.add(pRow, nonMutableModel.get(pRealPos));
+	    //String vVal = (String)vData.get(pRow);
+	    //vVal = (String)nonMutableModel.get(pRow);
 	}
 
 	/*private class AccountMetaDatasViewCellRenderer extends DefaultListCellRenderer {

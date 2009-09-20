@@ -13,13 +13,16 @@ public class TransactionEntry extends BaseModel {
     
     public static enum Type { DEBIT, CREDIT };
 
-    protected Account transferAccount;
+    private Account transferAccount;
 
-    protected Transaction transaction;
+    private Transaction transaction;
 
-    protected Type type;
+    private Type type;
 
-    protected double accountBalance;
+    private double accountBalance;
+
+    public TransactionEntry() {
+    }
 
     public TransactionEntry(Account transferAccount, Transaction transaction, Type type, double accountBalance) {
         this.transferAccount = transferAccount;
@@ -56,5 +59,8 @@ public class TransactionEntry extends BaseModel {
 	this.accountBalance = accountBalance;
     }
 
+    public void initTransferAccount(Account transferAccount) {
+	if (this.transferAccount == null) setTransferAccount(transferAccount);
+    }
     
 }

@@ -5,7 +5,7 @@
 
 package jaccounting.models;
 
-import jaccounting.exceptions.GenericException;
+import jaccounting.exceptions.NotTransactionnableAccountException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -134,7 +134,7 @@ public class JournalTest {
 	}
 
 	@Override
-	public void removeEntriesFromAccounts() throws GenericException {
+	public void removeEntriesFromAccounts() throws NotTransactionnableAccountException {
 	}
 
     }

@@ -1,5 +1,21 @@
 /*
- * AboutBox.java
+ * AboutBox.java		1.0.0		    09/2009
+ * This file contains the information dialog class of the JAccounting application.
+ *
+ * JAccounting - Basic Double Entry Accounting Software.
+ * Copyright (c) 2009 Boubacar Diallo.
+ *
+ * This software is free: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software.  If not, see http://www.gnu.org/licenses.
  */
 
 package jaccounting;
@@ -7,8 +23,24 @@ package jaccounting;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
 
+/**
+ * AboutBox is the gui class for displaying information about the application
+ * in a modal dialog. An AboutBox object presents details such as the application
+ * version, its title, homepage and a brief description.
+ *
+ * @author	    Boubacar Diallo
+ * @version	    1.0.0
+ * @since	    1.0.0
+ */
 public class AboutBox extends javax.swing.JDialog {
 
+    /**
+     * Sole Constructor; Initializes gui sub components and sets the "Close" button
+     * as the default button.
+     *
+     * @param parent	    the parent frame of this dialog
+     * @since		    1.0.0
+     */
     public AboutBox(java.awt.Frame parent) {
         super(parent);
         initComponents();
@@ -17,7 +49,12 @@ public class AboutBox extends javax.swing.JDialog {
 	vRmap.injectComponents(this);
     }
 
-    @Action public void closeAboutBox() {
+    /**
+     * Closes this application information dialog
+     * @since		1.0.0
+     */
+    @Action
+    public void closeAboutBox() {
         dispose();
     }
 

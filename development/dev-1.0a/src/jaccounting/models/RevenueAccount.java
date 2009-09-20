@@ -5,19 +5,30 @@
 
 package jaccounting.models;
 
+import java.util.List;
+
 /**
  *
  * @author bouba
  */
 public class RevenueAccount extends Account {
     
-    protected RevenueAccount() {
-	this(-1, "", "", 0.0, true);
+    public RevenueAccount() {
+	super();
+	type = Type.REVENUE;
     }
 
-    protected RevenueAccount(int number, String name, String description,
-                               double balance, boolean allowTransactions) {
-        super(number, name, description, balance, Type.REVENUE, allowTransactions);
+    public RevenueAccount(int number, String name, String description, double balance,
+	    boolean transactionsEnabled) {
+	super(number, name, description, balance, transactionsEnabled);
+	type = Type.REVENUE;
+    }
+
+    public RevenueAccount(int number, String name, String description,
+                               double balance, boolean allowTransactions,
+			       List<TransactionEntry> entries) {
+        super(number, name, description, balance, allowTransactions, entries);
+	type = Type.REVENUE;
     }
 
     protected void applyDebit(double pAmount) {

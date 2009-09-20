@@ -32,8 +32,10 @@ public class ModelsMngr {
     }
 
     private Data generateDefaultData() {
-        Data rData = new Data();
+	Data rData = new Data();
+
         rData.getGeneralLedger().addNewDefaultAccounts();
+
         return rData;
     }
 
@@ -56,7 +58,8 @@ public class ModelsMngr {
     }
 
     public void persit() throws IOException {
-	persister.persist(JAccounting.getApplication().getContext().getLocalStorage().openOutputFile(loadedFilename));
+	persister.persist(getData(),
+		JAccounting.getApplication().getContext().getLocalStorage().openOutputFile(loadedFilename));
     }
 
     

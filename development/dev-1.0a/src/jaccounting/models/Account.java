@@ -5,13 +5,16 @@
 package jaccounting.models;
 
 import jaccounting.exceptions.ErrorCode;
-import jaccounting.exceptions.GenericException;
+import jaccounting.exceptions.InvalidAccountTypeException;
+import jaccounting.exceptions.NotTransactionnableAccountException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -20,26 +23,31 @@ import java.util.Map;
 public abstract class Account extends BaseModel {
 
     public static enum Type {
-
 	ASSET, LIABILITY, EXPENSE, REVENUE, EQUITY
     }
 
-    protected List<TransactionEntry> entries;
     protected int number;
     protected String name;
     protected String description;
     protected double balance;
     protected Type type;
     protected boolean transactionsEnabled;
+    protected List<TransactionEntry> entries;
 
     public Account() {
-	this(-1, "", "", 0.0, null, true);
+	this(-1, "", "", 0.0, true, new ArrayList<TransactionEntry>());
+    }
+
+    public Account(int number, String name, String description, double balance,
+	    boolean transactionsEnabled) {
+	this(number, name, description, balance, transactionsEnabled,
+		new ArrayList<TransactionEntry>());
     }
 
     public Account(int number, String name, String description,
-	    double balance, Type type, boolean allowTransactions) {
-	List<TransactionEntry> vEntries = new ArrayList<TransactionEntry>();
-	this.initProperties(number, name, description, balance, type, allowTransactions, vEntries);
+	    double balance, boolean allowTransactions,
+	    List<TransactionEntry> entries) {
+	set(number, name, description, balance, null, allowTransactions, entries);
     }
 
     public double getBalance() {
@@ -74,7 +82,7 @@ public abstract class Account extends BaseModel {
 	this.type = type;
     }
 
-    public static Account createAccount(Type pType) throws GenericException {
+    public static Account createAccount(Type pType) throws InvalidAccountTypeException {
 	switch (pType) {
 	    case ASSET:
 		return (Account) new AssetAccount();
@@ -87,13 +95,13 @@ public abstract class Account extends BaseModel {
 	    case REVENUE:
 		return (Account) new RevenueAccount();
 	    default:
-		throw new GenericException(ErrorCode.INVALID_ACCOUNT_TYPE);
+		throw new InvalidAccountTypeException();
 	}
     }
 
     public static Account createAccount(int number, String name, String description,
 	    double balance, Type type, List<TransactionEntry> entries,
-	    boolean allowTransactions) throws GenericException {
+	    boolean allowTransactions) throws InvalidAccountTypeException {
 	Account rAccount = null;
 
 	switch (type) {
@@ -113,14 +121,18 @@ public abstract class Account extends BaseModel {
 		rAccount = new RevenueAccount();
 		break;
 	}
-	if (rAccount == null) throw new GenericException(ErrorCode.INVALID_ACCOUNT_TYPE);
-	rAccount.initProperties(number, name, description, balance, type, allowTransactions, entries);
+	if (rAccount == null) throw new InvalidAccountTypeException();
+	rAccount.set(number, name, description, balance, type, allowTransactions, entries);
 
 	return (Account) rAccount;
     }
 
-    protected void initProperties(int number, String name, String description,
+    protected void set(int number, String name, String description,
 	    double balance, Type type, boolean allowTransactions, List<TransactionEntry> entries) {
+	if (entries != null && !allowTransactions && entries.size() > 0) {
+	    Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Attempted to set non empty entries list for not transactionable account: " + name);
+	    entries = new ArrayList<TransactionEntry>();
+	}
 	this.number = number;
 	this.name = name;
 	this.description = description;
@@ -130,8 +142,14 @@ public abstract class Account extends BaseModel {
 	this.entries = entries;
     }
 
+    protected void set(int number, String name, String description) {
+	this.number = number;
+	this.name = name;
+	this.description = description;
+    }
+
     public List<Transaction> getAccountTransactions() {
-	List<Transaction> rTransactions = null;
+	List<Transaction> rTransactions = new ArrayList<Transaction>();
 	TransactionEntry vEntry;
 	ListIterator vIt = entries.listIterator();
 
@@ -143,21 +161,18 @@ public abstract class Account extends BaseModel {
 	return rTransactions;
     }
 
-    public Map<String, ErrorCode> updateProperties(int number, String name, String description) {
-	Map<String, ErrorCode> rErrors = validatePropertyValues(number, name, description);
+    public Map<String, ErrorCode> update(int number, String name, String description) {
+	Map<String, ErrorCode> rErrors = validateValues(number, name, description);
 	if (rErrors.isEmpty()) {
 	    // update fields
-	    this.number = number;
-	    this.name = name;
-	    this.description = description;
-
+	    set(number, name, description);
 	    // notify observers
 	    setChangedAndNotifyObservers();
 	}
 	return rErrors;
     }
 
-    public Map<String, ErrorCode> validatePropertyValues(int number, String name, String description) {
+    public Map<String, ErrorCode> validateValues(int number, String name, String description) {
 	Map<String, ErrorCode> rErrors = new HashMap<String, ErrorCode>();
 
 	if (number < -1) {
@@ -172,8 +187,8 @@ public abstract class Account extends BaseModel {
 	return rErrors;
     }
 
-    public void addEntry(TransactionEntry pEntry) throws GenericException {
-	if (!transactionsEnabled) throw new GenericException(ErrorCode.NOT_TRANSACTIONNABLE_ACCOUNT);
+    public void addEntry(TransactionEntry pEntry) throws NotTransactionnableAccountException {
+	if (!transactionsEnabled) throw new NotTransactionnableAccountException();
 	// get the index of the first entry whose date is bigger than this entry's
 	int vIndex = getIndexOfFirstEntryLaterThan(pEntry.getTransaction().getDate());
 	// insert at that index
@@ -221,8 +236,8 @@ public abstract class Account extends BaseModel {
 
     protected abstract void applyCredit(double pAmount);
 
-    public void removeEntry(TransactionEntry pEntry) throws GenericException {
-	if (!transactionsEnabled) throw new GenericException(ErrorCode.NOT_TRANSACTIONNABLE_ACCOUNT);
+    public void removeEntry(TransactionEntry pEntry) throws NotTransactionnableAccountException {
+	if (!transactionsEnabled) throw new NotTransactionnableAccountException();
 	int vIndex = entries.indexOf(pEntry);
 	if (entries.remove(pEntry)) {
 	    if (vIndex > 0) vIndex--;

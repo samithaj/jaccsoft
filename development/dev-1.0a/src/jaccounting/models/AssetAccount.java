@@ -5,19 +5,30 @@
 
 package jaccounting.models;
 
+import java.util.List;
+
 /**
  *
  * @author bouba
  */
 public class AssetAccount extends Account {
 
-    protected AssetAccount() {
-	this(-1, "", "", 0.0, true);
+    public AssetAccount() {
+	super();
+	type = Type.ASSET;
     }
 
-    protected AssetAccount(int number, String name, String description,
-                               double balance, boolean allowTransactions) {
-        super(number, name, description, balance, Type.ASSET, allowTransactions);
+    public AssetAccount(int number, String name, String description, double balance,
+	    boolean transactionsEnabled) {
+	super(number, name, description, balance, transactionsEnabled);
+	type = Type.ASSET;
+    }
+
+    public AssetAccount(int number, String name, String description,
+                        double balance, boolean allowTransactions,
+			List<TransactionEntry> entries) {
+        super(number, name, description, balance, allowTransactions, entries);
+	type = Type.ASSET;
     }
 
     protected void applyDebit(double pAmount) {

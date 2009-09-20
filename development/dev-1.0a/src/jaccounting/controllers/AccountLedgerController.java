@@ -17,7 +17,7 @@ import javax.swing.JTabbedPane;
 public class AccountLedgerController {
 
     private AccountLedgerController() {
-
+	super();
     }
 
     private static class AccountLedgerControllerHolder {
@@ -29,7 +29,7 @@ public class AccountLedgerController {
     }
 
     public void openAccountLedger(Account pAccount) {
-	JTabbedPane vTabsCont = JAccounting.getApplication().getView().getTabsContainer();
+	JTabbedPane vTabsCont = JAccounting.getApplication().getMainView().getTabsContainer();
 	int vIndex = getAccountLedgerTabIndex(pAccount);
 
 	if (vIndex == -1) {
@@ -43,7 +43,7 @@ public class AccountLedgerController {
     }
 
     private int getAccountLedgerTabIndex(Account pAccount) {
-	JTabbedPane vTabsCont = JAccounting.getApplication().getView().getTabsContainer();
+	JTabbedPane vTabsCont = JAccounting.getApplication().getMainView().getTabsContainer();
 	int rIndex = vTabsCont.getTabCount() -1;
 	String vFullName = GeneralLedgerController.getInstance().getAccountFullName(pAccount);
 

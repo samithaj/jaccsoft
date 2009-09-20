@@ -18,6 +18,10 @@ public abstract class BaseController {
 
     protected PropertyChangeSupport support;
 
+    public BaseController() {
+	support = new PropertyChangeSupport(this);
+    }
+
     public void runAction(String action) {
         ActionEvent evt = new ActionEvent("no source", ActionEvent.ACTION_PERFORMED, "no command");
         JAccounting.getApplication().getContext().getActionMap(this.getClass(), this)
