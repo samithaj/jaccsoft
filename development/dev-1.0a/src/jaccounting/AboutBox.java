@@ -49,6 +49,7 @@ public class AboutBox extends javax.swing.JDialog {
 	vRmap.injectComponents(this);
     }
 
+    
     /**
      * Closes this application information dialog
      * @since		1.0.0

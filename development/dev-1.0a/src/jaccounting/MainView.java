@@ -150,6 +150,7 @@ public class MainView extends FrameView implements ChangeListener, Observer {
         });
     }
 
+    
     /**
      * Gets the content panel's tabbed pane
      * @return		the content tabbed pane

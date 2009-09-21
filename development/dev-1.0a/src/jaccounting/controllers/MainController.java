@@ -7,6 +7,7 @@ package jaccounting.controllers;
 
 import jaccounting.JAccounting;
 import jaccounting.ModelsMngr;
+import jaccounting.exceptions.UnPersistenceFailureException;
 import jaccounting.models.Data;
 import java.io.IOException;
 import java.util.Observable;
@@ -132,7 +133,7 @@ public class MainController extends BaseController implements Observer {
 	    filename = pFilename;
         }
 
-        protected Void doInBackground() throws IOException, Exception {
+        protected Void doInBackground() throws IOException, UnPersistenceFailureException {
 	    ModelsMngr vModel = ModelsMngr.getInstance();
 	    try {
 		vModel.load(filename);
