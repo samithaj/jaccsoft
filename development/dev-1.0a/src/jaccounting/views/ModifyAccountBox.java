@@ -13,7 +13,7 @@ package jaccounting.views;
 
 import jaccounting.JAccounting;
 import jaccounting.controllers.GeneralLedgerController;
-import jaccounting.exceptions.ErrorCode;
+import jaccounting.ErrorCode;
 import jaccounting.models.Account;
 import java.util.Map;
 import javax.swing.JTextField;

@@ -20,7 +20,6 @@
 
 package jaccounting;
 
-import jaccounting.exceptions.UnPersistenceFailureException;
 import jaccounting.models.Data;
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,7 +41,7 @@ import java.io.OutputStream;
  */
 public class ModelsMngr {
 
-    private PersistenceHandler persister;   // the data saver and loader
+    private PersistenceHandler persister;   // the application data saver and loader
 
     private Data data;			    // the application's current data
 

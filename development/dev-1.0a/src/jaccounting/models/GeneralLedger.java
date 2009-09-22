@@ -5,8 +5,6 @@
 package jaccounting.models;
 
 import jaccounting.JAccounting;
-import jaccounting.ProgressReporter;
-import jaccounting.exceptions.NotTransactionnableAccountException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;

@@ -4,9 +4,7 @@
  */
 package jaccounting.models;
 
-import jaccounting.exceptions.ErrorCode;
-import jaccounting.exceptions.InvalidAccountTypeException;
-import jaccounting.exceptions.NotTransactionnableAccountException;
+import jaccounting.ErrorCode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;

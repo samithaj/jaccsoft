@@ -13,7 +13,7 @@ package jaccounting.views;
 
 import jaccounting.JAccounting;
 import jaccounting.controllers.JournalController;
-import jaccounting.exceptions.ErrorCode;
+import jaccounting.ErrorCode;
 import jaccounting.models.Transaction;
 import java.util.Date;
 import java.util.Map;

@@ -5,8 +5,7 @@
 
 package jaccounting.models;
 
-import jaccounting.exceptions.ErrorCode;
-import jaccounting.exceptions.NotTransactionnableAccountException;
+import jaccounting.ErrorCode;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;

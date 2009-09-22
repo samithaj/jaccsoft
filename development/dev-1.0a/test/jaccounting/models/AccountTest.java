@@ -5,7 +5,7 @@
 
 package jaccounting.models;
 
-import jaccounting.exceptions.ErrorCode;
+import jaccounting.ErrorCode;
 import jaccounting.models.Account.Type;
 import java.util.ArrayList;
 import java.util.Date;

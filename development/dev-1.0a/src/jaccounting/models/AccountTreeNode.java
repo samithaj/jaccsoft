@@ -6,7 +6,6 @@
 package jaccounting.models;
 
 import jaccounting.JAccounting;
-import jaccounting.exceptions.NotTransactionnableAccountException;
 import java.util.Enumeration;
 import java.util.List;
 import javax.swing.tree.DefaultMutableTreeNode;

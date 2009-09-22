@@ -14,15 +14,12 @@ import java.awt.GridLayout;
 import java.util.Enumeration;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
-import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
@@ -292,10 +289,10 @@ public class GeneralLedgerView extends JPanel implements Observer {
 
     public synchronized int getCurrentlySelectedRow() {
 	int rRow = -1;
-	int[] vSelRows = accountNamesView.getSelectionRows();
-
-	if (vSelRows != null && vSelRows.length > 0) {
-	    rRow = vSelRows[0];
+	TreePath vSelPath = accountNamesView.getSelectionPath();
+	
+	if (vSelPath != null) {
+	    rRow = accountNamesView.getAbsoluteRowForPath(vSelPath);
 	}
 
 	return rRow;

@@ -1,5 +1,5 @@
 /*
- * ModelsMngr.java	    1.0.0	    09/2009
+ * PersistenceHandler.java	    1.0.0	    09/2009
  * This file contains the main class of the JAccounting application.
  *
  * JAccounting - Basic Double Entry Accounting Software.
@@ -20,8 +20,6 @@
 
 package jaccounting;
 
-import jaccounting.exceptions.GenericException;
-import jaccounting.exceptions.UnPersistenceFailureException;
 import jaccounting.models.*;
 import java.io.IOException;
 import java.io.InputStream;

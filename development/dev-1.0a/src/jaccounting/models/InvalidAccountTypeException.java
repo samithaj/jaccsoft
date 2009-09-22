@@ -3,7 +3,10 @@
  * and open the template in the editor.
  */
 
-package jaccounting.exceptions;
+package jaccounting.models;
+
+import jaccounting.GenericException;
+import jaccounting.ErrorCode;
 
 /**
  *
