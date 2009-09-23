@@ -1,12 +1,21 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
- * ModifyTransactionBox.java
+ * ModifyTransactionBox.java		1.0.0		09/2009
+ * This file contains the transaction editor box class of the JAccounting application.
  *
- * Created on 10-Aug-2009, 10:01:57 PM
+ * JAccounting - Basic Double Entry Accounting Software.
+ * Copyright (c) 2009 Boubacar Diallo.
+ *
+ * This software is free: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software.  If not, see http://www.gnu.org/licenses.
  */
 
 package jaccounting.views;
@@ -27,24 +36,43 @@ import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
 
 /**
+ * ModifyTransactionBox is the gui class for editing/adding transactions.
  *
- * @author bouba
+ * @author	    Boubacar Diallo
+ * @version	    1.0.0
+ * @see		    jaccounting.controllers.JournalController
+ * @see		    jaccounting.models.Transaction
+ * @since	    1.0.0
  */
 public class ModifyTransactionBox extends javax.swing.JDialog {
 
     private JournalController controller;
+
     private Transaction model;
-    private boolean isNew;
-    
-    /** Creates new form ModifyTransactionBox */
+
+    private boolean isNew;  // whether the transaction being edited is new or not
+
+
+    /**
+     * Sole constructor. This constructor initializes this view's controller and
+     * model and creates its gui components.
+     *
+     * @param parent		    the parent frame of this dialog
+     * @param controller	    the controller; a JournalController
+     * @see			    jaccounting.controllers.JournalController
+     * @see			    jaccounting.models.Transaction
+     * @since			    1.0.0
+     */
     public ModifyTransactionBox(java.awt.Frame parent, JournalController pController) {
         super(parent, true);
 	controller = pController;
+	
         initComponents();
 	getRootPane().setDefaultButton(cancelButton);
 	ResourceMap vRmap = JAccounting.getApplication().getContext().getResourceMap(this.getClass());
 	vRmap.injectComponents(this);
     }
+
 
     public void setIsNew(boolean pVal) {
 	isNew = pVal;
@@ -84,6 +112,78 @@ public class ModifyTransactionBox extends javax.swing.JDialog {
 
     public JTextField getRefNoInput() {
 	return refNoInput;
+    }
+
+    /**
+     * Intializes the inputs of this editor form to their values in the model.
+     * This methods clears the error texts if any first.
+     *
+     * @since		    1.0.0
+     */
+    public void initFormFields() {
+	clearErrors();
+	dateInput.setValue(model.getDate());
+	refNoInput.setText(model.getRefNo());
+	memoInput.setText(model.getMemo());
+	if (!isNew) {
+	    creditAccountInput.setSelectedItem(controller.getAccountFullName(model.getDebitEntry().getTransferAccount()));
+	    debitAccountInput.setSelectedItem(controller.getAccountFullName(model.getCreditEntry().getTransferAccount()));
+	}
+	amountInput.setText(model.getAmount()+"");
+    }
+
+    /**
+     * Cancels the editing by disposing of this form dialog.
+     *
+     * @since			1.0.0
+     */
+    @Action
+    public void cancel() {
+	dispose();
+    }
+
+    private String[] buildAccountNamesList() {
+	 return controller.getTransactionnableAccountFullNames();
+    }
+
+    /**
+     * Clears the error texts from this form.
+     *
+     * @since			1.0.0
+     */
+    public void clearErrors() {
+	dateErrorLabel.setText("");
+	creditAccountErrorLabel.setText("");
+	debitAccountErrorLabel.setText("");
+	amountErrorLabel.setText("");
+    }
+
+    /**
+     * Displays errors related to the input entered by the user.
+     *
+     * @param pErrors		map of error codes indexed by field name
+     * @since			1.0.0
+     */
+    public void displayErrors(Map<String, ErrorCode> pErrors) {
+	if (pErrors.containsKey("amount")) {
+	    amountErrorLabel.setText(pErrors.get("amount").message());
+	    amountErrorLabel.grabFocus();
+	}
+
+	if (pErrors.containsKey("debitAccount")) {
+	    debitAccountErrorLabel.setText(pErrors.get("debitAccount").message());
+	    debitAccountErrorLabel.grabFocus();
+	}
+
+	if (pErrors.containsKey("creditAccount")) {
+	    creditAccountErrorLabel.setText(pErrors.get("creditAccount").message());
+	    creditAccountErrorLabel.grabFocus();
+	}
+
+	if (pErrors.containsKey("date")) {
+	    dateErrorLabel.setText(pErrors.get("date").message());
+	    dateErrorLabel.grabFocus();
+	}
     }
 
     /** This method is called from within the constructor to
@@ -301,57 +401,6 @@ public class ModifyTransactionBox extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    public void initFormFields() {
-	clearErrors();
-	dateInput.setValue(model.getDate());
-	refNoInput.setText(model.getRefNo());
-	memoInput.setText(model.getMemo());
-	if (!isNew) {
-	    creditAccountInput.setSelectedItem(controller.getAccountFullName(model.getDebitEntry().getTransferAccount()));
-	    debitAccountInput.setSelectedItem(controller.getAccountFullName(model.getCreditEntry().getTransferAccount()));
-	}
-	amountInput.setText(model.getAmount()+"");
-    }
-
-    @Action
-    public void cancel() {
-	dispose();
-    }
-
-    protected String[] buildAccountNamesList() {
-	 return controller.getTransactionnableAccountFullNames();
-    }
-
-    public void clearErrors() {
-	dateErrorLabel.setText("");
-	creditAccountErrorLabel.setText("");
-	debitAccountErrorLabel.setText("");
-	amountErrorLabel.setText("");
-    }
-
-    public void displayErrors(Map<String, ErrorCode> pErrors) {
-	if (pErrors.containsKey("amount")) {
-	    amountErrorLabel.setText(pErrors.get("amount").message());
-	    amountErrorLabel.grabFocus();
-	}
-
-	if (pErrors.containsKey("debitAccount")) {
-	    debitAccountErrorLabel.setText(pErrors.get("debitAccount").message());
-	    debitAccountErrorLabel.grabFocus();
-	}
-
-	if (pErrors.containsKey("creditAccount")) {
-	    creditAccountErrorLabel.setText(pErrors.get("creditAccount").message());
-	    creditAccountErrorLabel.grabFocus();
-	}
-
-	if (pErrors.containsKey("date")) {
-	    dateErrorLabel.setText(pErrors.get("date").message());
-	    dateErrorLabel.grabFocus();
-	}
-    }
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel amountErrorLabel;

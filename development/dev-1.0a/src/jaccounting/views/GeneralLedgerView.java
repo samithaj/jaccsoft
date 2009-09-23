@@ -1,7 +1,23 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * GeneralLedgerView.java		1.0.0		09/2009
+ * This file contains the general ledger interface class of the JAccounting application.
+ *
+ * JAccounting - Basic Double Entry Accounting Software.
+ * Copyright (c) 2009 Boubacar Diallo.
+ *
+ * This software is free: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software.  If not, see http://www.gnu.org/licenses.
  */
+
 package jaccounting.views;
 
 import jaccounting.JAccounting;
@@ -37,25 +53,62 @@ import javax.swing.tree.TreePath;
 import org.jdesktop.application.ResourceMap;
 
 /**
+ * GeneralLedgerView is the gui class for the general ledger interface. A
+ * GeneralLedgerView object lists all the accounts in the GeneralLedger model. It
+ * notifies the GeneralLedgerController of selection changes from the user.
  *
- * @author bouba
+ * @author	    Boubacar Diallo
+ * @version	    1.0.0
+ * @see		    jaccounting.controllers.GeneralLedgerController
+ * @see		    jaccounting.models.GeneralLedger
+ * @since	    1.0.0
  */
 public class GeneralLedgerView extends JPanel implements Observer {
 
+    /**
+     * This class attempts to fake TreeTable gui by using a JTee and JLists. When
+     * a row is selected in either JTree or JList, the exact row is selected in
+     * the remaining other components. Since there is a potential for recursing, i.e
+     * selection of a row in JTree leads to selection of row in JList which leads
+     * to selection of row in JTree, a synchronized flag inProcessingRowSelection
+     * is used to avoid repeating selection in a given component.
+     */
+
+    /** this view's controller; a GeneralLedgerController */
     private GeneralLedgerController controller;
-    private GeneralLedger mModel;
+
+    /** this view's model; a GeneralLedger */
+    private GeneralLedger appModel;
+
+    /** the gui subcomponent for listing account names */
     private AccountNamesView accountNamesView;
+
+    /** the gui subcomponent for listing account descriptions */
     private AccountMetaDatasView accountDescriptionsView;
+
+    /** the gui subcomponent for listing account balances */
     private AccountMetaDatasView accountBalancesView;
+
+    /** special flag used to avoid recursive selection change events handling */
     private boolean inProcessingRowSelection;
 
+
+    /**
+     * Sole constructor. This constructor initializes this view's controller and
+     * model, creates its gui components and observes its model object.
+     *
+     * @param controller	    the controller; a GeneralLedgerController
+     * @param model		    the model; a GeneralLedger
+     * @see			    jaccounting.controllers.GeneralLedgerController
+     * @see			    jaccounting.models.GeneralLedger
+     * @since			    1.0.0
+     */
     public GeneralLedgerView(GeneralLedgerController controller, GeneralLedger model) {
 	this.controller = controller;
-	this.mModel = model;
-	inProcessingRowSelection = false;
+	this.appModel = model;
 
 	initComponents();
-	this.mModel.addObserver(this);
+	this.appModel.addObserver(this);
     }
 
     private void initComponents() {
@@ -73,18 +126,16 @@ public class GeneralLedgerView extends JPanel implements Observer {
 
 	// content
 	JPanel vContent = new JPanel();
-	// set as grid layout
 	vContent.setLayout(new GridLayout(1, 3));
 	// create columns
-	// first columns names
+	// first names column
 	AccountNamesView vAccountNames = new AccountNamesView(buildAccountNamesTree());
-	//AccountNamesView vAccountNames = new AccountNamesView(mModel.getRoot());
-
-	// second column descriptions
-	AccountMetaDatasView vAccountDescriptions = new AccountMetaDatasView(0, buildAccountDescriptionsList(), buildAccountDescriptionsList());
-
-	// third column balances
-	AccountMetaDatasView vAccountBalances = new AccountMetaDatasView(1, buildAccountBalancesList(), buildAccountBalancesList());
+	// second descriptions column
+	AccountMetaDatasView vAccountDescriptions = new AccountMetaDatasView(0,
+		buildAccountDescriptionsList(), buildAccountDescriptionsList());
+	// third balances column
+	AccountMetaDatasView vAccountBalances = new AccountMetaDatasView(1,
+		buildAccountBalancesList(), buildAccountBalancesList());
 
 	vContent.add(vAccountNames);
 	vContent.add(vAccountDescriptions);
@@ -96,9 +147,6 @@ public class GeneralLedgerView extends JPanel implements Observer {
 
 	add(vHeader, BorderLayout.NORTH);
 	add(vContentPane, BorderLayout.CENTER);
-	/*add(new JPanel(), BorderLayout.EAST);
-	add(new JPanel(), BorderLayout.WEST);
-	add(new JPanel(), BorderLayout.SOUTH);*/
 
 	accountNamesView = vAccountNames;
 	accountDescriptionsView = vAccountDescriptions;
@@ -109,38 +157,38 @@ public class GeneralLedgerView extends JPanel implements Observer {
     }
 
     private TreeNode buildAccountNamesTree() {
-	DefaultMutableTreeNode rRoot = new DefaultMutableTreeNode((String)mModel.getRoot().getUserObject());
-	buildAccountNameNode(mModel.getRoot(), rRoot);
+	DefaultMutableTreeNode rRoot = new DefaultMutableTreeNode((String)appModel.getRoot().getUserObject());
+	buildAccountNameNode(appModel.getRoot(), rRoot);
 	return rRoot;
     }
 
     private DefaultListModel buildAccountDescriptionsList() {
-	Enumeration vEnum;
 	Account vAcct;
 	DefaultMutableTreeNode vNode;
 	DefaultListModel rList = new DefaultListModel();
+	Enumeration vEnum = appModel.getRoot().preorderEnumeration();
 
-	rList.addElement(" ");
-	vEnum = mModel.getRoot().preorderEnumeration();
-	vEnum.nextElement(); // skip root
+	rList.addElement(" ");		// root equivalent
+	vEnum.nextElement();		// skip root
 	while (vEnum.hasMoreElements()) {
 	    vNode = (DefaultMutableTreeNode) vEnum.nextElement();
 	    vAcct = (Account) vNode.getUserObject();
-	    rList.addElement((vAcct.getDescription().length()>0?vAcct.getDescription():" "));
+	    rList.addElement(((vAcct.getDescription().length()) > 0
+				? vAcct.getDescription()
+				: " "));
 	}
 
 	return rList;
     }
 
     private DefaultListModel buildAccountBalancesList() {
-	Enumeration vEnum;
 	Account vAcct;
 	DefaultMutableTreeNode vNode;
 	DefaultListModel rList = new DefaultListModel();
+	Enumeration vEnum = appModel.getRoot().preorderEnumeration();
 
-	rList.addElement(" ");
-	vEnum = mModel.getRoot().preorderEnumeration();
-	vEnum.nextElement(); // skip root
+	rList.addElement(" ");		// root equivalent
+	vEnum.nextElement();		// skip root
 	while (vEnum.hasMoreElements()) {
 	    vNode = (DefaultMutableTreeNode) vEnum.nextElement();
 	    vAcct = (Account) vNode.getUserObject();
@@ -154,6 +202,7 @@ public class GeneralLedgerView extends JPanel implements Observer {
 	DefaultMutableTreeNode vRoot = pRoot;
 	Enumeration vChildren = pAcctNode.children();
 
+	/** Avoid root node since it is not an Account object */
 	if (pAcctNode.getParent() != null) {
 	    Account vAcct = (Account) pAcctNode.getUserObject();
 	    vRoot = new DefaultMutableTreeNode(vAcct.getName());
@@ -169,6 +218,11 @@ public class GeneralLedgerView extends JPanel implements Observer {
     }
 
     private void accountNamesSelectionChanged(TreePath pNew, TreePath pOld) {
+	/**
+	 * If this selection change in the names tree is due a change in the
+	 * selection in the descriptions or balances list, we exit to avoid
+	 * being caught in a recursion.
+	 */
 	synchronized (this) {
 	    if (inProcessingRowSelection) {
 		return;
@@ -176,12 +230,21 @@ public class GeneralLedgerView extends JPanel implements Observer {
 	    inProcessingRowSelection = true;
 	}
 
-	if (pNew != null) {
+	if (pNew != null) {	// case when a new names tree node was selected
+	    /**
+	     * We get the absolute row because the names tree's rows do not match the
+	     * rows in the GeneralLedger tree when some of its nodes are collapsed.
+	     */
 	    int vRow = accountNamesView.getAbsoluteRowForPath(pNew);
+	    /** select the matching rows in the descriptions list and balances list */
 	    selectAccountMetaDatasRow(vRow, -1);
+	    /** advise the controller of the newly selected account */
 	    controller.accountSelected(vRow);
-	} else if (pOld != null) {
+	} 
+	else if (pOld != null) {    // case when no names tree node was selected
+	    /** deselect selected rows in the descriptions and balances lists */
 	    selectAccountMetaDatasRow(-1, -1);
+	    /* advise the controller */
 	    controller.noAccountSelected();
 	}
 
@@ -191,6 +254,16 @@ public class GeneralLedgerView extends JPanel implements Observer {
     }
 
     private void accountMetaDatasSelectionChanged(int pColIndex, int pNew) {
+	/**
+	 * pColIndex = 0 => descriptions list column
+	 * pColIndex = 1 => balances list column
+	 */
+
+	/**
+	 * If this selection change in a balances or descriptions list is due a
+	 * change in the selection in another gui subcomponent, we exit to avoid
+	 * being caught in a recursion.
+	 */
 	synchronized (this) {
 	    if (inProcessingRowSelection) {
 		return;
@@ -201,6 +274,7 @@ public class GeneralLedgerView extends JPanel implements Observer {
 	int vNew = pNew;
 	if (pNew != -1) {
 	    synchronized (this) {
+		/** for safety, get the selected index from the proper object */
 		if (pColIndex == 0) {
 		    vNew = accountDescriptionsView.getSelectedIndex();
 		} else if (pColIndex == 1) {
@@ -208,8 +282,14 @@ public class GeneralLedgerView extends JPanel implements Observer {
 		}
 	    }
 
+	    /** selects the names tree at the selected index */
 	    selectAccountNamesRow(vNew);
+	    /**
+	     * selects other list columns except the originator column of this
+	     * selection change event
+	     */
 	    selectAccountMetaDatasRow(vNew, pColIndex);
+	    /** notify our beloved controller */
 	    controller.accountSelected(vNew);
 	}
 
@@ -219,6 +299,13 @@ public class GeneralLedgerView extends JPanel implements Observer {
     }
 
     private synchronized void selectAccountMetaDatasRow(int pRow, int pExceptCol) {
+	/**
+	 * Select the provided index in all list columns except pExceptCol
+	 * pColIndex = 0 => descriptions list column
+	 * pColIndex = 1 => balances list column
+	 * pColIndex = -1 => no list column i.e. select in all columns.
+	 */
+
 	if (pExceptCol != 0) {
 	    if (pRow != -1) {
 		accountDescriptionsView.setSelectedIndex(pRow);
@@ -241,8 +328,13 @@ public class GeneralLedgerView extends JPanel implements Observer {
     }
 
     private void accountNamesNodeExpanded(TreePath pPath) {
+	/**
+	 * AFTER a names tree node has been fully expanded, we show the
+	 * corresponding rows in the descriptions and balances lists
+	 */
 	updateVisibleMetaDatasRow(pPath);
 
+	/** just in case the node expansion resulted in a selection clearance that we did not catch */
 	if (accountNamesView.isSelectionEmpty()) {
 	    selectAccountMetaDatasRow(-1, -1);
 	    controller.noAccountSelected();
@@ -250,10 +342,19 @@ public class GeneralLedgerView extends JPanel implements Observer {
     }
 
     private void accountNamesNodeWillCollapse(TreePath pPath) {
+	/**
+	 * BEFORE a names tree node has been fully collapsed, we hide the
+	 * corresponding rows in the descriptions and balances lists
+	 */
 	updateInVisibleMetaDatasRow(pPath);
     }
 
     private void accountNamesNodeCollapsed(TreePath pPath) {
+	/**
+	 * AFTER a names tree node has been fully collapsed, we do not do much
+	 * except check to see if the node collapse resulted in a selection
+	 * clearance that we did not catch
+	 */
 	if (accountNamesView.isSelectionEmpty()) {
 	    selectAccountMetaDatasRow(-1, -1);
 	    controller.noAccountSelected();
@@ -265,6 +366,10 @@ public class GeneralLedgerView extends JPanel implements Observer {
 	TreePath vPath;
 	int vRowToHide = vRow;
 
+	/**
+	 * Hide the descriptions and balances lists rows of the collapsed
+	 * names tree node's children.
+	 */
 	while ((vPath = accountNamesView.getPathForRow(vRow)) !=  null
 		&& pPath.isDescendant(vPath)) {
 	    accountDescriptionsView.fakeHideElementAt(vRowToHide);
@@ -278,6 +383,10 @@ public class GeneralLedgerView extends JPanel implements Observer {
 	TreePath vPath;
 	int vRowToShow;
 
+	/**
+	 * Show the descriptions and balances lists rows of the expanded
+	 * names tree node's children.
+	 */
 	while ((vPath = accountNamesView.getPathForRow(vRow)) !=  null
 		&& pPath.isDescendant(vPath)) {
 	    vRowToShow = accountNamesView.getAbsoluteRowForPath(vPath);
@@ -287,10 +396,20 @@ public class GeneralLedgerView extends JPanel implements Observer {
 	}
     }
 
+    /**
+     * Gets the currently selected row number.
+     *
+     * @return		    the currently selected row or -1
+     * @since		    1.0.0
+     */
     public synchronized int getCurrentlySelectedRow() {
 	int rRow = -1;
 	TreePath vSelPath = accountNamesView.getSelectionPath();
-	
+
+	/**
+	 * We need the get the absolute row of the path in the GeneralLedger model
+	 * to avoid confusing our controller of what account is selected.
+	 */
 	if (vSelPath != null) {
 	    rRow = accountNamesView.getAbsoluteRowForPath(vSelPath);
 	}
@@ -298,19 +417,41 @@ public class GeneralLedgerView extends JPanel implements Observer {
 	return rRow;
     }
 
+    /**
+     * Gets the currently selected Account object. This method effectively gets
+     * the currently selected row and asks the GeneralLedger for the corresponding
+     * Account object.
+     *
+     * @return		    the currently selected Account
+     * @see		    #getCurrentlySelectedRow()
+     * @see		    jaccounting.models.GeneralLedger#getAccount(int)
+     * @since		    1.0.0
+     */
     public Account getCurrentlySelectedAccount() {
-	// get currently selected row
 	int vSelRow = getCurrentlySelectedRow();
-	// get its account
-	return mModel.getAccount(vSelRow);
+	return appModel.getAccount(vSelRow);
     }
 
+    /**
+     * Selects a row number.
+     *
+     * @since		    1.0.0
+     */
     public void selectAccountAtRow(int pRow) {
 	if (pRow > 0) {
 	    selectAccountNamesRow(pRow);
 	}
     }
 
+    /**
+     * Handles change notifications from this view's model. This method simply
+     * re-initializes this view and redraws it before selecting the previously
+     * selected row.
+     *
+     * @param o			the object being observed by this view
+     * @param arg		additional information about the change
+     * @since			1.0.0
+     */
     public void update(Observable o, Object arg) {
 	handleModelChanged();
     }
@@ -323,17 +464,17 @@ public class GeneralLedgerView extends JPanel implements Observer {
 	selectAccountAtRow(vRow);
     }
 
-    private class AccountNamesView extends JTree implements TreeSelectionListener, TreeExpansionListener, TreeWillExpandListener {
+    private class AccountNamesView extends JTree implements TreeSelectionListener,
+	    TreeExpansionListener, TreeWillExpandListener {
 
-	public AccountNamesView(TreeNode pAccountNames) {
+	private AccountNamesView(TreeNode pAccountNames) {
 	    super(pAccountNames);
 	    setShowsRootHandles(true);
-	    //setCellRenderer(new AccountNamesViewCellRenderer());
 	    setSelectionModel(new AccountNamesViewSelectionModel());
 	    setRootVisible(true);
 	}
 
-	public void addDefaultListeners() {
+	private void addDefaultListeners() {
 	    addTreeSelectionListener(this);
 	    addTreeExpansionListener(this);
 	    addTreeWillExpandListener(this);
@@ -343,17 +484,22 @@ public class GeneralLedgerView extends JPanel implements Observer {
 	    accountNamesSelectionChanged(e.getNewLeadSelectionPath(), e.getOldLeadSelectionPath());
 	}
 
-	public void expandAll() {
+	private void expandAll() {
 	    for (int i = 0; i < getRowCount(); i++) {
 		expandRow(i);
 	    }
 	}
 
-	public int getAbsoluteRowForPath(TreePath path) {
+	private int getAbsoluteRowForPath(TreePath path) {
 	    int rRow = -1;
 	    int vInd;
 	    String vPathName = path.toString();
-	    
+
+	    /**
+	     * Transform the path's string value to our usual account full
+	     * name seperated by a dot and ask the GeneralLedger for the matching
+	     * account's row.
+	     */
 	    vPathName = vPathName.replaceAll("^\\[", "");
 	    vPathName = vPathName.replaceAll("\\]$", "");
 	    vPathName = vPathName.replaceAll(",\\s{1}", ".");
@@ -361,12 +507,11 @@ public class GeneralLedgerView extends JPanel implements Observer {
 	    if (vInd > 0) {
 		vPathName = vPathName.substring(vInd+1);
 		if (vPathName.length() > 0) {
-		    rRow = mModel.getRowOfAccount(mModel.getAccount(vPathName));
+		    rRow = appModel.getRowOfAccount(appModel.getAccount(vPathName));
 		}
-	    } else rRow = 0;
+	    }
+	    else rRow = 0;
 
-	    //Logger.getAnonymousLogger().log(Level.INFO, path.toString());
-	    //Logger.getAnonymousLogger().log(Level.INFO, vPathName);
 	    return rRow;
 	}
 
@@ -393,73 +538,34 @@ public class GeneralLedgerView extends JPanel implements Observer {
 	    }
 	}
 
-	/*private class AccountNamesViewCellRenderer extends JPanel implements TreeCellRenderer {
-	private JLabel nameField;
-
-	private JLabel descriptionField;
-
-	private JLabel balanceField;
-
-	public AccountNamesViewCellRenderer() {
-	nameField = new JLabel();
-	descriptionField = new JLabel();
-	balanceField = new JLabel();
-
-	setLayout(new BorderLayout());
-	add(nameField, BorderLayout.WEST);
-	add(descriptionField, BorderLayout.CENTER);
-	add(balanceField, BorderLayout.EAST);
-	}
-
-	public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
-	if (selected) {
-	setBackground(Color.BLUE);
-	} else {
-	setBackground(Color.white);
-	}
-	String vName;
-	String vDescription;
-	String vBalance;
-
-	DefaultMutableTreeNode vNode = (DefaultMutableTreeNode) value;
-	try {
-	Account vAcct = (Account) vNode.getUserObject();
-	vName = vAcct.getName();
-	vDescription = vAcct.getDescription();
-	vBalance = ""+vAcct.getBalance();
-	} catch (ClassCastException vEx) {
-	try {
-	String[] vHeaders = (String[]) vNode.getUserObject();
-	vName = vHeaders[0];
-	vDescription = vHeaders[1];
-	vBalance = vHeaders[2];
-	} catch (ClassCastException vEx2) {
-	vName = vNode.getUserObject().toString();
-	vDescription = vName;
-	vBalance = vName;
-	}
-	}
-
-	nameField.setText(vName);
-	descriptionField.setText(vDescription);
-	balanceField.setText(vBalance);
-
-	return this;
-	}
-
-	}*/
     }
 
     private class AccountMetaDatasView extends JList implements ListSelectionListener {
 
+	/**
+	 * This class uses a little trick to introduce show and hide functionality
+	 * to the JList. Ordirnally, to hide an element from a JList the element
+	 * needs to be deleted from the model and therefore is lost. To alleviate
+	 * it, this class introduces a clone of its TreeModel that contains all
+	 * the elements and never gets mutated. Elements are deleted from the usual
+	 * TreeModel to implement the hide; elements are taken from the immutable
+	 * TreeModel and inserted into the usual TreeModel.
+	 */
+
+	/**
+	 * this meta data column's index;
+	 * 0 => descriptions list column,
+	 * 1 => balances list column
+	 */
 	private int colIndex;
+
 	private DefaultListModel nonMutableModel;
 
-	public AccountMetaDatasView(int pColIndex, DefaultListModel pMetaDatas, DefaultListModel pNonMutableModel) {
+
+	private AccountMetaDatasView(int pColIndex, DefaultListModel pMetaDatas, DefaultListModel pNonMutableModel) {
 	    super(pMetaDatas);
 	    addListSelectionListener(this);
 	    setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-	    //setCellRenderer(new AccountMetaDatasViewCellRenderer());
 	    colIndex = pColIndex;
 	    nonMutableModel = pNonMutableModel;
 	}
@@ -468,24 +574,15 @@ public class GeneralLedgerView extends JPanel implements Observer {
 	    accountMetaDatasSelectionChanged(colIndex, e.getLastIndex());
 	}
 
-	public synchronized void fakeHideElementAt(int pRow) {
+	private synchronized void fakeHideElementAt(int pRow) {
 	    DefaultListModel vData = (DefaultListModel) getModel();
 	    vData.remove(pRow);
-	    //String vVal = (String)vData.get(pRow);
-	    //vVal = "";
 	}
 
-	public synchronized void fakeShowElementAt(int pRow, int pRealPos) {
+	private synchronized void fakeShowElementAt(int pRow, int pRealPos) {
 	    DefaultListModel vData = (DefaultListModel) getModel();
 	    vData.add(pRow, nonMutableModel.get(pRealPos));
-	    //String vVal = (String)vData.get(pRow);
-	    //vVal = (String)nonMutableModel.get(pRow);
 	}
 
-	/*private class AccountMetaDatasViewCellRenderer extends DefaultListCellRenderer {
-	public AccountMetaDatasViewCellRenderer() {
-	//setVisible(false);
-	}
-	}*/
     }
 }

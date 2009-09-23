@@ -1,12 +1,21 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
- * ModifyAccountBox.java
+ * ModifyAccountBox.java		1.0.0		09/2009
+ * This file contains the account editor box class of the JAccounting application.
  *
- * Created on 24-May-2009, 2:25:41 PM
+ * JAccounting - Basic Double Entry Accounting Software.
+ * Copyright (c) 2009 Boubacar Diallo.
+ *
+ * This software is free: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software.  If not, see http://www.gnu.org/licenses.
  */
 
 package jaccounting.views;
@@ -18,11 +27,15 @@ import jaccounting.models.Account;
 import java.util.Map;
 import javax.swing.JTextField;
 import org.jdesktop.application.Action;
-import org.jdesktop.application.ResourceMap;
 
 /**
+ * ModifyAccountBox is the gui class for editing/adding accounts.
  *
- * @author bouba
+ * @author	    Boubacar Diallo
+ * @version	    1.0.0
+ * @see		    jaccounting.controllers.GeneralLedgerController
+ * @see		    jaccounting.models.Account
+ * @since	    1.0.0
  */
 public class ModifyAccountBox extends javax.swing.JDialog {
 
@@ -30,18 +43,29 @@ public class ModifyAccountBox extends javax.swing.JDialog {
 
     private Account model;
 
-    private boolean isNew;
+    private boolean isNew;  // whether the account being edited is new or not
 
-    /** Creates new form ModifyAccountBox */
+
+
+    /**
+     * Sole constructor. This constructor initializes this view's controller and
+     * model and creates its gui components.
+     *
+     * @param parent		    the parent frame of this dialog
+     * @param controller	    the controller; a JournalController
+     * @see			    jaccounting.controllers.JournalController
+     * @see			    jaccounting.models.Account
+     * @since			    1.0.0
+     */
     public ModifyAccountBox(java.awt.Frame parent, GeneralLedgerController pController) {
         super(parent, true);
         controller = pController;
        
         initComponents();
         getRootPane().setDefaultButton(cancelButton);
-	ResourceMap vRmap = JAccounting.getApplication().getContext().getResourceMap(this.getClass());
-	vRmap.injectComponents(this);
+	JAccounting.getApplication().getContext().getResourceMap(this.getClass()).injectComponents(this);
     }
+
 
     public void setModel(Account pModel) {
         this.model = pModel;
@@ -71,13 +95,25 @@ public class ModifyAccountBox extends javax.swing.JDialog {
 	return numberTextField;
     }
 
+    /**
+     * Intializes the inputs of this editor form to their values in the model.
+     * This methods clears the error texts if any first.
+     *
+     * @since		    1.0.0
+     */
     public void initFormFields() {
 	clearErrors();
-        this.nameTextField.setText(this.model.getName());
-	this.numberTextField.setText((this.model.getNumber() > 0 ? this.model.getNumber()+"" : ""));
-	this.descriptionTextField.setText(this.model.getDescription());
+        nameTextField.setText(model.getName());
+	numberTextField.setText((model.getNumber() > 0 ? model.getNumber()+"" : ""));
+	descriptionTextField.setText(model.getDescription());
     }
 
+    /**
+     * Displays errors related to the input entered by the user.
+     *
+     * @param pErrors		map of errors indexed by field name
+     * @since			1.0.0
+     */
     public void displayErrors(Map<String, ErrorCode> pErrors) {
 	if (pErrors.containsKey("number")) {
 	    numberErrorLabel.setText(pErrors.get("number").message());
@@ -90,11 +126,21 @@ public class ModifyAccountBox extends javax.swing.JDialog {
 	}
     }
 
+    /**
+     * Clears the error texts from this form.
+     *
+     * @since			1.0.0
+     */
     public void clearErrors() {
 	nameErrorLabel.setText("");
 	numberErrorLabel.setText("");
     }
 
+    /**
+     * Cancels the editing by disposing of this form dialog.
+     *
+     * @since			1.0.0
+     */
     @Action
     public void cancel() {
         dispose();
@@ -244,23 +290,6 @@ public class ModifyAccountBox extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    /**
-    * @param args the command line arguments
-    */
-    /*public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                ModifyAccountBox dialog = new ModifyAccountBox(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }*/
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel boxInstructionsLabel;

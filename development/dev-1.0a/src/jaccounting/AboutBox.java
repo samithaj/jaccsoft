@@ -45,7 +45,8 @@ public class AboutBox extends javax.swing.JDialog {
         super(parent);
         initComponents();
         getRootPane().setDefaultButton(closeButton);
-	ResourceMap vRmap = JAccounting.getApplication().getContext().getResourceMap(AboutBox.class);
+	ResourceMap vRmap = JAccounting.getApplication().getContext()
+					.getResourceMap(AboutBox.class);
 	vRmap.injectComponents(this);
     }
 
