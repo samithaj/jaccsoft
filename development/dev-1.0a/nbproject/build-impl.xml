@@ -186,18 +186,7 @@ is divided into following sections:
             <sequential>
                 <property location="${build.dir}/empty" name="empty.dir"/>
                 <mkdir dir="${empty.dir}"/>
-                <javac debug="@{debug}" deprecation="${javac.deprecation}" destdir="@{destdir}" encoding="${source.encoding}" excludes="@{excludes}" includeantruntime="false" includes="@{includes}" source="${javac.source}" sourcepath="@{sourcepath}" srcdir="@{srcdir}" target="${javac.target}">
-                    <src>
-                        <dirset dir="@{gensrcdir}" erroronmissingdir="false">
-                            <include name="*"/>
-                        </dirset>
-                    </src>
-                    <classpath>
-                        <path path="@{classpath}"/>
-                    </classpath>
-                    <compilerarg line="${javac.compilerargs} ${javac.compilerargs.jaxws}"/>
-                    <customize/>
-                </javac>
+                
             </sequential>
         </macrodef>
         <macrodef name="depend" uri="http://www.netbeans.org/ns/j2se-project/3">
@@ -374,7 +363,7 @@ is divided into following sections:
     </target>
     <target if="do.depend.true" name="-compile-depend">
         <pathconvert property="build.generated.subdirs">
-            <dirset dir="${build.generated.sources.dir}" erroronmissingdir="false">
+            <dirset dir="${build.generated.sources.dir}">
                 <include name="*"/>
             </dirset>
         </pathconvert>
@@ -565,7 +554,7 @@ is divided into following sections:
             <fileset dir="${src.dir}" excludes="${excludes}" includes="${includes}">
                 <filename name="**/*.java"/>
             </fileset>
-            <fileset dir="${build.generated.sources.dir}" erroronmissingdir="false">
+            <fileset dir="${build.generated.sources.dir}">
                 <include name="**/*.java"/>
             </fileset>
         </javadoc>
