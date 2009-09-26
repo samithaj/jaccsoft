@@ -197,7 +197,7 @@ public class ModifyAccountBox extends javax.swing.JDialog {
         descriptionTextField.setName("descriptionTextField"); // NOI18N
         descriptionTextField.setPreferredSize(new java.awt.Dimension(100, 20));
 
-        modifyButton.setAction(JAccounting.getApplication().getContext().getActionMap(GeneralLedgerController.class, GeneralLedgerController.getInstance()).get("modifyAccount"));
+        modifyButton.setAction(JAccounting.getApplication().getContext().getActionMap(GeneralLedgerController.class, GeneralLedgerController.getInstance()).get("updateAccount"));
         modifyButton.setName("modifyButton"); // NOI18N
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(jaccounting.JAccounting.class).getContext().getActionMap(ModifyAccountBox.class, this);

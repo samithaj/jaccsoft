@@ -363,7 +363,7 @@ public class ModifyTransactionBox extends javax.swing.JDialog {
         debitAccountInput.setModel(new javax.swing.DefaultComboBoxModel(buildAccountNamesList()));
         creditAccountInput.setModel(new javax.swing.DefaultComboBoxModel(buildAccountNamesList()));
 
-        modifyButton.setAction(JAccounting.getApplication().getContext().getActionMap(JournalController.class, JournalController.getInstance()).get("modifyTransaction"));
+        modifyButton.setAction(JAccounting.getApplication().getContext().getActionMap(JournalController.class, JournalController.getInstance()).get("updateTransaction"));
         modifyButton.setName("modifyButton"); // NOI18N
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(jaccounting.JAccounting.class).getContext().getActionMap(ModifyTransactionBox.class, this);
