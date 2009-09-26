@@ -222,7 +222,7 @@ is divided into following sections:
             <attribute default="${includes}" name="includes"/>
             <attribute default="${excludes}" name="excludes"/>
             <attribute default="**" name="testincludes"/>
-            <sequential>
+            <!--<sequential>
                 <junit dir="${work.dir}" errorproperty="tests.failed" failureproperty="tests.failed" fork="true" showoutput="true">
                     <batchtest todir="${build.test.results.dir}">
                         <fileset dir="${test.src.dir}" excludes="@{excludes},${excludes}" includes="@{includes}">
@@ -232,15 +232,15 @@ is divided into following sections:
                     <classpath>
                         <path path="${run.test.classpath}"/>
                     </classpath>
-                    <!--<syspropertyset>
+                    <syspropertyset>
                         <propertyref prefix="test-sys-prop."/>
                         <mapper from="test-sys-prop.*" to="*" type="glob"/>
-                    </syspropertyset>-->
+                    </syspropertyset>
                     <formatter type="brief" usefile="false"/>
                     <formatter type="xml"/>
                     <jvmarg line="${run.jvmargs}"/>
                 </junit>
-            </sequential>
+            </sequential>-->
         </macrodef>
     </target>
     <target depends="-init-debug-args" name="-init-macrodef-nbjpda">
