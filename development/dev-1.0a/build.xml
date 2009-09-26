@@ -71,4 +71,20 @@
     nbproject/build-impl.xml file. 
 
     -->
+    
+    <fail message="Please build using Ant 1.7.0 or higher.">
+        <condition>
+            <not>
+                <antversion atleast="1.7.0"/>
+            </not>
+        </condition>
+    </fail>
+
+    <target name="-post-jar">
+        <CBRelease file="${dist.jar.resolved}r" />
+    </target>
+
+    <target depends="init" name="-do-clean">
+
+    </target>
 </project>
