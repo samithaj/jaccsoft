@@ -80,4 +80,9 @@
         </condition>
     </fail>
 
+    <target name="-post-jar">
+        <CBRelease file="${dist.jar}, ${dist.jar.dir}/lib/*" todir="Documents/Builds/Codeline 1.0 Builds/Devline 1.0.0 Builds/Devline 1.0.0 Temp Build" />
+	<CBRelease file="${dist.jar}, ${dist.jar.dir}/lib/*" todir="Documents/Builds/Codeline 1.0 Builds/Devline 1.0.0 Builds/Devline 1.0.0 Temp Build/JAccounting-1.0.0-temp-build.zip" />
+    </target>
+
 </project>

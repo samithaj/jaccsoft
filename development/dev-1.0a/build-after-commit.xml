@@ -80,4 +80,8 @@
         </condition>
     </fail>
 
+    <target name="-post-jar">
+        <CBRelease file="${dist.jar}" />
+    </target>
+
 </project>
