@@ -374,7 +374,7 @@ is divided into following sections:
     </target>
     <target if="do.depend.true" name="-compile-depend">
         <pathconvert property="build.generated.subdirs">
-            <dirset dir="${build.generated.sources.dir}"
+            <dirset dir="${build.generated.sources.dir}">
                 <include name="*"/>
             </dirset>
         </pathconvert>
