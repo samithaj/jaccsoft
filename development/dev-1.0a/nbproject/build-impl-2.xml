@@ -371,7 +371,7 @@ is divided into following sections:
     </target>
     <target depends="init,deps-jar,-pre-pre-compile,-pre-compile,-compile-depend" if="have.sources" name="-do-compile">
         <!--<j2seproject3:javac gensrcdir="${build.generated.sources.dir}"/>-->
-	<javac srcdir="${src.dir}" destdir="${build.classes.dir}" includes="**/*" excludes="**/resources/*, **/*.form" />
+	<javac srcdir="${src.dir}" destdir="${build.classes.dir}" includes="**/*" excludes="**/resources/**, **/*.form" />
         <copy todir="${build.classes.dir}">
             <fileset dir="${src.dir}" excludes="${build.classes.excludes},${excludes}" includes="${includes}"/>
         </copy>
