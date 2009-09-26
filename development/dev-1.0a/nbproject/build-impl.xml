@@ -615,7 +615,14 @@ is divided into following sections:
         <mkdir dir="${build.test.results.dir}"/>
     </target>
     <target depends="init,compile-test,-pre-test-run" if="have.tests" name="-do-test-run">
-        <junit testincludes="**/*Test.java"/>
+        <junit>
+            <classpath refid="${javac.test.classpath}"/>
+            <formatter type="xml"/>
+            <batchtest fork="yes" todir="${build.test.classes.dir}">
+                <fileset dir="${test.src.dir}" includes="**/*Test.java"/>
+            </batchtest>
+        </junit>
+        <!--<junit testincludes="**/*Test.java"/>-->
     </target>
     <target depends="init,compile-test,-pre-test-run,-do-test-run" if="have.tests" name="-post-test-run">
         <fail if="tests.failed" unless="ignore.failing.tests">Some tests failed; see details above.</fail>
