@@ -107,7 +107,7 @@
 
         <delete file="${store.dir}/temp_final.jar"/>
 
-        <CBRelease file="${store.jar}" todir="Documents/Builds/Codeline 1.0 Builds/Devline 1.0.0 Builds/Devline 1.0.0 After Commit Build" />
+        <CBRelease file="${store.jar}" todir="Downloads/Builds/Codeline 1.0 Builds/Devline 1.0.0 Builds/Devline 1.0.0 After Commit Build" />
 
     </target>
 
