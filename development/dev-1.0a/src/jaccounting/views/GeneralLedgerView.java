@@ -111,6 +111,7 @@ public class GeneralLedgerView extends JPanel implements Observer {
 	this.appModel.addObserver(this);
     }
 
+    
     private void initComponents() {
 	ResourceMap vRmap = JAccounting.getApplication().getContext().getResourceMap(this.getClass());
 

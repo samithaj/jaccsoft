@@ -46,7 +46,6 @@ public class ModifyAccountBox extends javax.swing.JDialog {
     private boolean isNew;  // whether the account being edited is new or not
 
 
-
     /**
      * Sole constructor. This constructor initializes this view's controller and
      * model and creates its gui components.

@@ -1,6 +1,21 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * AccountTest.java		    1.0.0	    09/2009
+ * This file contains test cases for the Account class of the JAccounting application.
+ *
+ * JAccounting - Basic Double Entry Accounting Software.
+ * Copyright (c) 2009 Boubacar Diallo.
+ *
+ * This software is free: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software.  If not, see http://www.gnu.org/licenses.
  */
 
 package jaccounting.models;
@@ -19,14 +34,19 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * AccountTest is the test class for the Account class.
  *
- * @author bouba
+ * @author	    Boubacar Diallo
+ * @version	    1.0.0
+ * @see		    Account
+ * @since	    1.0.0
  */
 public class AccountTest {
 
     private Account assetAccountWithNoEntries;
 
     private Account accountWithNoEntries;
+
 
     public AccountTest() {
     }
@@ -61,6 +81,7 @@ public class AccountTest {
     public void tearDown() {
     }
 
+
     /**
      * Test of createAccount method, of class Account.
      */
@@ -68,7 +89,9 @@ public class AccountTest {
     public void testCreateAccount_AccountType_Creates_An_Asset_Account() throws Exception {
 	System.out.println("createAccount");
 	Type pType = Account.Type.ASSET;
+
 	Account result = Account.createAccount(pType);
+
 	assertTrue(result instanceof AssetAccount);
     }
 
@@ -79,7 +102,9 @@ public class AccountTest {
     public void testCreateAccount_AccountType_Creates_A_Liability_Account() throws Exception {
 	System.out.println("createAccount");
 	Type pType = Account.Type.LIABILITY;
+
 	Account result = Account.createAccount(pType);
+
 	assertTrue(result instanceof LiabilityAccount);
     }
 
@@ -90,7 +115,9 @@ public class AccountTest {
     public void testCreateAccount_AccountType_Creates_An_Equity_Account() throws Exception {
 	System.out.println("createAccount");
 	Type pType = Account.Type.EQUITY;
+
 	Account result = Account.createAccount(pType);
+
 	assertTrue(result instanceof EquityAccount);
     }
 
@@ -101,7 +128,9 @@ public class AccountTest {
     public void testCreateAccount_AccountType_Creates_A_Revenue_Account() throws Exception {
 	System.out.println("createAccount");
 	Type pType = Account.Type.REVENUE;
+
 	Account result = Account.createAccount(pType);
+
 	assertTrue(result instanceof RevenueAccount);
     }
 
@@ -112,7 +141,9 @@ public class AccountTest {
     public void testCreateAccount_AccountType_Creates_An_Expense_Account() throws Exception {
 	System.out.println("createAccount");
 	Type pType = Account.Type.EXPENSE;
+
 	Account result = Account.createAccount(pType);
+
 	assertTrue(result instanceof ExpenseAccount);
     }
 
@@ -130,7 +161,8 @@ public class AccountTest {
 	List<TransactionEntry> entries = null;
 	boolean allowTransactions = false;
 
-	Account result = Account.createAccount(number, name, description, balance, type, entries, allowTransactions);
+	Account result = Account.createAccount(number, name, description,
+		    balance, type, entries, allowTransactions);
 
 	assertTrue(result instanceof AssetAccount);
 	assertEquals(10, result.number);
@@ -225,10 +257,12 @@ public class AccountTest {
     public void testAddEntry_Adds_Two_Entries_Consecutively() throws Exception {
 	System.out.println("addEntry");
 	TransactionEntry e1 = new TransactionEntry(null,
-		new Transaction(new Date(), "Sample Ref No", "Sample Memo", 1000.50, null, null),
+		new Transaction(new Date(), "Sample Ref No", "Sample Memo",
+				1000.50, null, null),
 		TransactionEntry.Type.DEBIT, 0.0);
 	TransactionEntry e2 = new TransactionEntry(null,
-		new Transaction(new Date(), "Sample Ref No", "Sample Memo", 2000.50, null, null),
+		new Transaction(new Date(), "Sample Ref No", "Sample Memo",
+				2000.50, null, null),
 		TransactionEntry.Type.CREDIT, 0.0);
 
 	assetAccountWithNoEntries.addEntry(e1);
@@ -249,10 +283,12 @@ public class AccountTest {
     public void testRemoveEntry() throws Exception {
 	System.out.println("removeEntry");
 	TransactionEntry e1 = new TransactionEntry(null,
-		new Transaction(new Date(), "Sample Ref No", "Sample Memo", 1000.50, null, null),
+		new Transaction(new Date(), "Sample Ref No", "Sample Memo",
+				1000.50, null, null),
 		TransactionEntry.Type.DEBIT, 0.0);
 	TransactionEntry e2 = new TransactionEntry(null,
-		new Transaction(new Date(), "Sample Ref No", "Sample Memo", 2000.50, null, null),
+		new Transaction(new Date(), "Sample Ref No", "Sample Memo",
+				2000.50, null, null),
 		TransactionEntry.Type.CREDIT, 0.0);
 
 	assetAccountWithNoEntries.addEntry(e1);
@@ -265,7 +301,8 @@ public class AccountTest {
 	assertEquals(-2000.50, e2.getAccountBalance(), 0.0);
     }
 
-    public class AccountImpl extends Account {
+
+    private class AccountImpl extends Account {
 
 	public void applyDebit(double pAmount) {
 	    balance += pAmount;

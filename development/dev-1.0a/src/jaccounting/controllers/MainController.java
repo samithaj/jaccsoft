@@ -89,14 +89,22 @@ public class MainController extends BaseController implements Observer {
     }
 
     private void performAfterLoadOperations() {
-	// observe data to enable or disable save
+	// observe data to enable or disable save actions
 	JAccounting.getApplication().getModelsMngr().getData().addObserver(this);
 	// open general ledger
+	JAccounting.getApplication().getProgressReporter()
+	    .reportUsingKey("messages.openingGeneralLedger");
 	GeneralLedgerController.getInstance().openGeneralLedger();
 	// open journal
+	JAccounting.getApplication().getProgressReporter()
+	    .reportUsingKey("messages.openingJournal");
 	JournalController.getInstance().openJournal();
 	// show general ledger
+	JAccounting.getApplication().getProgressReporter()
+	    .reportUsingKey("messages.showingGeneralLedger");
 	GeneralLedgerController.getInstance().openGeneralLedger();
+
+	JAccounting.getApplication().getProgressReporter().reportFinished();
     }
 
     /**
@@ -117,7 +125,7 @@ public class MainController extends BaseController implements Observer {
      * Depending on the selected tab, this method shows/hides the general ledger
      * tools bar or the journal tools bar and enables/disables the close tab action.
      *
-     * @param pRow	    the row of the selected transaction in the Journal model
+     * @param pIndex	    the index of the selected transaction in the Journal model
      * @since		    1.0.0
      */
     public void tabSelected(int pIndex) {

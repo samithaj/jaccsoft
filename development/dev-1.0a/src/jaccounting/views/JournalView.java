@@ -135,9 +135,11 @@ public class JournalView extends JPanel implements Observer {
 
     private void transactionsSelectionChanged() {
 	int vRow = transactionsView.getSelectedRow();
+	
 	if (vRow >= 0) {
 	    controller.transactionSelected(vRow);
-	} else {
+	}
+	else {
 	    controller.noTransactionSelected();
 	}
     }

@@ -253,17 +253,9 @@ public class GeneralLedgerController extends BaseController {
 
 	GeneralLedger vModel = getModel();
 	// remove account node
-	try {
-	    JAccounting.getApplication().getProgressReporter()
-			.reportUsingKey("messages.removingAccount");
-	    vModel.removeAccount(vRow);
-	    JAccounting.getApplication().getProgressReporter().reportFinished();
-	} 
-	catch (NotTransactionnableAccountException ex) {
-	    Logger.getLogger(GeneralLedgerController.class.getName())
-		    .log(Level.SEVERE, "Failed to delete account at row "
-					+ vRow, ex);
-	}
+	JAccounting.getApplication().getProgressReporter()
+		    .reportUsingKey("messages.removingAccount");
+	vModel.removeAccount(vRow);
 	
 	JAccounting.getApplication().getProgressReporter().reportFinished();
     }
@@ -271,7 +263,7 @@ public class GeneralLedgerController extends BaseController {
     /**
      * Opens the account ledger interface of the currently selected account in
      * the general ledger interface. This method delegates the job to {@link
-     * AccountLedgerController#openAccountLedger(jaccounting.models.Account) }.
+     * AccountLedgerController#openAccountLedger(jaccounting.models.Account)}.
      *
      * @see		AccountLedgerController#openAccountLedger(jaccounting.models.Account)
      * @see		jaccounting.views.GeneralLedgerView#getCurrentlySelectedAccount()
@@ -288,7 +280,10 @@ public class GeneralLedgerController extends BaseController {
 	    return;
 	}
 	// open its ledger through AccountLedgerController
+	JAccounting.getApplication().getProgressReporter()
+			.reportUsingKey("messages.openingAccountLedger");
 	AccountLedgerController.getInstance().openAccountLedger(vAcct);
+	JAccounting.getApplication().getProgressReporter().reportFinished();
     }
 
     /**
@@ -462,7 +457,7 @@ public class GeneralLedgerController extends BaseController {
      * Gets the Account of a given full name. This is a convinience methods for
      * other controllers to access the GeneralLedger model.
      *
-     * @param pAcct	    the full name of the Account
+     * @param pFullName	    the full name of the Account
      * @return		    the Account of the given full name
      * @see		    jaccounting.models.GeneralLedger#getAccount(java.lang.String)
      * @since		    1.0.0

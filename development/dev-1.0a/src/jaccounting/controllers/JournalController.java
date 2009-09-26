@@ -243,17 +243,12 @@ public class JournalController extends BaseController {
 	}
 
 	Journal vModel = getModel();
-	try {
-	    // remove transaction
-	    JAccounting.getApplication().getProgressReporter()
-			.reportUsingKey("messages.removingTransaction");
-	    vModel.removeTransaction(vRow);
-	    JAccounting.getApplication().getProgressReporter().reportFinished();
-	}
-	catch (GenericException ex) {
-	    Logger.getLogger(JournalController.class.getName())
-		    .log(Level.SEVERE, "Failed to delete transaction at row " + vRow, ex);
-	}
+	// remove transaction from journal
+	JAccounting.getApplication().getProgressReporter()
+		    .reportUsingKey("messages.removingTransaction");
+	vModel.removeTransaction(vRow);
+	
+	JAccounting.getApplication().getProgressReporter().reportFinished();
      }
 
      /**

@@ -77,7 +77,8 @@ public class AccountLedgerController {
 		    GeneralLedgerController.getInstance().getAccountFullName(pAccount));
 	    vTabsCont.setSelectedIndex(vTabsCont.getTabCount()-1);
 	    JAccounting.getApplication().getProgressReporter().reportFinished();
-	} else {
+	}
+	else {
 	    vTabsCont.setSelectedIndex(vIndex);
 	}
     }

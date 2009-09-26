@@ -1,7 +1,23 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * GeneralLedger.java		    1.0.0	    09/2009
+ * This file contains the general ledger model class of the JAccounting application.
+ *
+ * JAccounting - Basic Double Entry Accounting Software.
+ * Copyright (c) 2009 Boubacar Diallo.
+ *
+ * This software is free: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software.  If not, see http://www.gnu.org/licenses.
  */
+
 package jaccounting.models;
 
 import jaccounting.JAccounting;
@@ -12,34 +28,63 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import org.jdesktop.application.ResourceMap;
 
 /**
+ * GeneralLedger is the class representing an accounting general ledger. A GeneralLedger
+ * object holds the Accounts is a tree structure of AccountTreeNode objects.
  *
- * @author bouba
+ * @author	    Boubacar Diallo
+ * @version	    1.0.0
+ * @see		    AccountTreeNode
+ * @see		    Account
+ * @since	    1.0.0
  */
 public class GeneralLedger extends BaseModel {
 
-    protected DefaultMutableTreeNode root;
-    protected AccountTreeNode assetsNode;
-    protected AccountTreeNode liabilitiesNode;
-    protected AccountTreeNode revenuesNode;
-    protected AccountTreeNode expensesNode;
-    protected AccountTreeNode equityNode;
+    protected DefaultMutableTreeNode root;	// the root node
 
+    protected AccountTreeNode assetsNode;	// the node for asset accounts
+
+    protected AccountTreeNode liabilitiesNode;	// the node fore liability accounts
+
+    protected AccountTreeNode revenuesNode;	// the node for revenue accounts
+
+    protected AccountTreeNode expensesNode;	// the node for expense accounts
+
+    protected AccountTreeNode equityNode;	// the node for equity accounts
+
+
+    /**
+     * No argument constructor; initialiazes all nodes and adds them to the root.
+     *
+     * @see		    AccountTreeNode
+     * @see		    AssetAccount
+     * @see		    LiabilityAccount
+     * @see		    RevenueAccount
+     * @see		    ExpenseAccount
+     * @see		    EquityAccount
+     * @since		    1.0.0
+     */
     public GeneralLedger() {
-	ResourceMap vRmap = JAccounting.getApplication().getContext().getResourceMap(this.getClass());
+	ResourceMap vRmap = JAccounting.getApplication().getContext()
+					.getResourceMap(this.getClass());
 
-	AssetAccount vAssets = new AssetAccount(-1, vRmap.getString("accountNames.assets"),
-		vRmap.getString("accountDescriptions.assets"),
+	AssetAccount vAssets = new AssetAccount(-1, 
+			vRmap.getString("accountNames.assets"),
+			vRmap.getString("accountDescriptions.assets"),
 		0.0, false);
-	LiabilityAccount vLiabilities = new LiabilityAccount(-1, vRmap.getString("accountNames.liabilities"),
+	LiabilityAccount vLiabilities = new LiabilityAccount(-1,
+		vRmap.getString("accountNames.liabilities"),
 		vRmap.getString("accountDescriptions.liabilities"),
 		0.0, false);
-	RevenueAccount vRevenues = new RevenueAccount(-1, vRmap.getString("accountNames.revenues"),
+	RevenueAccount vRevenues = new RevenueAccount(-1,
+		vRmap.getString("accountNames.revenues"),
 		vRmap.getString("accountDescriptions.revenues"),
 		0.0, false);
-	ExpenseAccount vExpenses = new ExpenseAccount(-1, vRmap.getString("accountNames.expenses"),
+	ExpenseAccount vExpenses = new ExpenseAccount(-1,
+		vRmap.getString("accountNames.expenses"),
 		vRmap.getString("accountDescriptions.expenses"),
 		0.0, false);
-	EquityAccount vEquity = new EquityAccount(-1, vRmap.getString("accountNames.equity"),
+	EquityAccount vEquity = new EquityAccount(-1,
+		vRmap.getString("accountNames.equity"),
 		vRmap.getString("accountDescriptions.equity"),
 		0.0, false);
 
@@ -57,6 +102,18 @@ public class GeneralLedger extends BaseModel {
 	root.add(expensesNode);
     }
 
+    /**
+     * Full argument constructor; initializes the nodes with the given values and
+     * adds them to the root.
+     *
+     * @param root		    the root node
+     * @param assetsNode	    the asset accounts node
+     * @param liabilitiesNode	    the liability accounts node
+     * @param revenuesNode	    the revenue accounts node
+     * @param expensesNode	    the expense accounts node
+     * @param equityNode	    the equity accounts node
+     * @since			    1.0.0
+     */
     public GeneralLedger(DefaultMutableTreeNode root, AccountTreeNode assetsNode, 
 	    AccountTreeNode liabilitiesNode, AccountTreeNode revenuesNode,
 	    AccountTreeNode expensesNode, AccountTreeNode equityNode) {
@@ -66,6 +123,7 @@ public class GeneralLedger extends BaseModel {
 	this.revenuesNode = revenuesNode;
 	this.expensesNode = expensesNode;
 	this.equityNode = equityNode;
+	
 	this.root.add(this.assetsNode);
 	this.root.add(this.liabilitiesNode);
 	this.root.add(this.equityNode);
@@ -73,6 +131,7 @@ public class GeneralLedger extends BaseModel {
 	this.root.add(this.expensesNode);
     }
 
+    
     public DefaultMutableTreeNode getRoot() {
 	return root;
     }
@@ -97,6 +156,15 @@ public class GeneralLedger extends BaseModel {
 	return revenuesNode;
     }
 
+    /**
+     * Gets the Acount object at the specified row. This method calls {@link
+     * #getAccountNodeAtRow(int) } to get the Account.
+     *
+     * @param pRow	    the row number
+     * @return		    the Account or null
+     * @see		    #getAccountNodeAtRow(int)
+     * @since		    1.0.0
+     */
     public Account getAccount(int pRow) {
 	Account rAcct = null;
 	AccountTreeNode vNode = getAccountNodeAtRow(pRow);
@@ -106,33 +174,45 @@ public class GeneralLedger extends BaseModel {
 	return rAcct;
     }
 
+    /**
+     * Gets the AccountTreeNode object at the specified row in the tree.
+     *
+     * @param pRow	    the row number
+     * @return		    the AccountTreeNode or null
+     * @since		    1.0.0
+     */
     public AccountTreeNode getAccountNodeAtRow(int pRow) {
 	Enumeration vEnum = root.preorderEnumeration();
 
-	vEnum.nextElement(); // skip root
+	vEnum.nextElement();		    // skip the root node
 	for (int vI = 1; vI < pRow; vI++) {
 	    if (vEnum.hasMoreElements()) {
 		vEnum.nextElement();
-	    } else {
-		break;
 	    }
+	    else break;
 	}
 
-	if (vEnum.hasMoreElements()) return (AccountTreeNode) vEnum.nextElement();
-	else return null;
+	return (vEnum.hasMoreElements()) ? (AccountTreeNode) vEnum.nextElement()
+					 : null;
     }
 
+    /**
+     * Gets the row number of a given Account object.
+     *
+     * @param pAcct		the Account
+     * @return			the row number or -1
+     * @since			1.0.0
+     */
     public int getRowOfAccount(Account pAcct) {
 	Enumeration vEnum = root.preorderEnumeration();
 	int rRow = -1;
-
-	// skip root
-	vEnum.nextElement();
 	int vCurrRow = 0;
-
+	
+	vEnum.nextElement();		    // skip the root node
 	while (vEnum.hasMoreElements()) {
 	    vCurrRow++;
-	    if (((Account)((AccountTreeNode)vEnum.nextElement()).getUserObject()).equals(pAcct)) {
+	    if (((Account)((AccountTreeNode)vEnum.nextElement()).getUserObject())
+			.equals(pAcct)) {
 		rRow = vCurrRow;
 		break;
 	    }
@@ -141,47 +221,121 @@ public class GeneralLedger extends BaseModel {
 	return rRow;
     }
 
-    public void insertChildAccount(int pRow, Account pAcct) {
+    /**
+     * Adds an Account to this GeneralLedger. This method creates a new AccountTreeNode
+     * for the given Account and inserts it as a child of the AccountTreeNode at
+     * the given row before notifying the change observers.
+     *
+     * @param pRow		the row number of the AccountTreeNode to insert
+     *				a child for
+     * @param pAcct		the Account to be added
+     * @return			true if the insertion was successful; false otherwise
+     * @see			BaseModel#setChangedAndNotifyObservers()
+     * @since			1.0.0
+     */
+    public boolean insertChildAccount(int pRow, Account pAcct) {
 	AccountTreeNode vAcctNode = getAccountNodeAtRow(pRow);
-	if (vAcctNode != null && vAcctNode.canHaveChildren() && vAcctNode.isAccountNameUniqueAmongChildren(pAcct.getName())) {
-	    // add new node
+
+	if (vAcctNode != null 
+		&& vAcctNode.canHaveChildren()
+		&& vAcctNode.isAccountNameUniqueAmongChildren(pAcct.getName())) {
 	    vAcctNode.add(new AccountTreeNode(pAcct));
 	    setChangedAndNotifyObservers();
+
+	    return true;
 	}
+
+	return false;
     }
 
-    public void removeAccount(int pRow) throws NotTransactionnableAccountException {
+    /**
+     * Removes the Account at the specified from this GeneralLedger. This method
+     * essentiallly removes the AccountTreeNode at the specified row. After successful
+     * removal, it notifies the change observers.
+     *
+     * @param pRow		the row number
+     * @return			true if the removal was successful; false otherwise
+     * @see			AccountTreeNode#remove()
+     * @see			BaseModel#setChangedAndNotifyObservers()
+     * @since			1.0.0
+     */
+    public boolean removeAccount(int pRow) {
 	AccountTreeNode vAcctNode = getAccountNodeAtRow(pRow);
+
 	if (vAcctNode != null && vAcctNode.canBeRemoved()) {
-	    vAcctNode.remove();
-	    setChangedAndNotifyObservers();
+	    try {
+		vAcctNode.remove();
+		setChangedAndNotifyObservers();
+
+		return true;
+	    } 
+	    catch (NotTransactionnableAccountException ex) { }
 	}
+
+	return false;
     }
 
+    /**
+     * Specifies whether the Account at the given row can edited. This method
+     * basically checks that the AccountTreeNode at the given row is not a
+     * top level node (level 0 or 1).
+     *
+     * @param pRow		the row number
+     * @return			true if the Account can be edited; false otherwise
+     * @since			1.0.0
+     */
     public boolean canAccountBeEdited(int pRow) {
 	AccountTreeNode vAcctNode = getAccountNodeAtRow(pRow);
-	if (vAcctNode != null) return vAcctNode.canBeEdited();
-	return false;
+	return (vAcctNode != null) ? vAcctNode.canBeEdited() : false;
     }
 
+    /**
+     * Specifies whether the Account at the given row can be removed. This method
+     * basically checks that the AccountTreeNode at the given row is not a
+     * top level node (level 0 or 1).
+     *
+     * @param pRow		the row number
+     * @return			true if the Account can be removed; false otherwise
+     * @since			1.0.0
+     */
     public boolean canAccountBeRemoved(int pRow) {
 	AccountTreeNode vAcctNode = getAccountNodeAtRow(pRow);
-	if (vAcctNode != null) return vAcctNode.canBeRemoved();
-	return false;
+	return (vAcctNode != null) ? vAcctNode.canBeRemoved() : false;
     }
 
+    /**
+     * Specifies whether the Account at the given row can have child Accounts.
+     * This method  basically checks that the AccountTreeNode at the given row
+     * is not the root node.
+     *
+     * @param pRow		the row number
+     * @return			true if the Account can have children; false otherwise
+     * @since			1.0.0
+     */
     public boolean canAccountHaveChildren(int pRow) {
 	AccountTreeNode vAcctNode = getAccountNodeAtRow(pRow);
-	if (vAcctNode != null) return vAcctNode.canHaveChildren();
-	return false;
+	return (vAcctNode != null) ? vAcctNode.canHaveChildren() : false;
     }
 
+    /**
+     * Specifies whether the Account at the given row is a top level Account i.e.
+     * it's at level 0 or 1 in the tree.
+     *
+     * @param pRow		the row number
+     * @return			true if the Account is top level; false otherwise
+     * @since			1.0.0
+     */
     public boolean isAccountTopLevel(int pRow) {
 	AccountTreeNode vAcctNode = getAccountNodeAtRow(pRow);
-	if (vAcctNode != null) return vAcctNode.isTopLevel();
-	return false;
+	return (vAcctNode != null) ? vAcctNode.isTopLevel() : false;
     }
 
+    /**
+     * Gets a list of the names of all Accounts that allow transactions on them.
+     *
+     * @return			the list of Accounts that allow transactions on them
+     * @since			1.0.0
+     */
     public String[] getTransactionnableAccountFullNames() {
 	return getAccountFullNames(true);
     }
@@ -201,6 +355,14 @@ public class GeneralLedger extends BaseModel {
 	return rAccts;
     }
 
+    /**
+     * Gets the full name of an Account, i.e. its name prepended with all of its
+     * parents names.
+     *
+     * @param pAcct		the Account
+     * @return			the Account full name
+     * @since			1.0.0
+     */
     public String getAccountFullName(Account pAcct) {
 	String rName = "";
 	int vRow = getRowOfAccount(pAcct);
@@ -212,6 +374,13 @@ public class GeneralLedger extends BaseModel {
 	return rName;
     }
 
+    /**
+     * Gets the Account matching the given full name.
+     *
+     * @param pFullName		    the full name
+     * @return			    the Account of that full name
+     * @since			    1.0.0
+     */
     public Account getAccount(String pFullName) {
 	Account rAcct;
 
@@ -240,26 +409,67 @@ public class GeneralLedger extends BaseModel {
 	return rAcct;
     }
 
+    /**
+     * Gets the asset Account matching the given full name.
+     *
+     * @param pFullName		    the full name
+     * @return			    the asset Account of that full name
+     * @since			    1.0.0
+     */
     protected Account getAssetAccount(String pFullName) {
 	return assetsNode.getAccount(pFullName);
     }
 
+    /**
+     * Gets the liability Account matching the given full name.
+     *
+     * @param pFullName		    the full name
+     * @return			    the liability Account of that full name
+     * @since			    1.0.0
+     */
     protected Account getLiabilityAccount(String pFullName) {
 	return liabilitiesNode.getAccount(pFullName);
     }
 
+    /**
+     * Gets the equity Account matching the given full name.
+     *
+     * @param pFullName		    the full name
+     * @return			    the equity Account of that full name
+     * @since			    1.0.0
+     */
     protected Account getEquityAccount(String pFullName) {
 	return equityNode.getAccount(pFullName);
     }
 
+    /**
+     * Gets the revenue Account matching the given full name.
+     *
+     * @param pFullName		    the full name
+     * @return			    the revenue Account of that full name
+     * @since			    1.0.0
+     */
     protected Account getRevenueAccount(String pFullName) {
 	return revenuesNode.getAccount(pFullName);
     }
 
+    /**
+     * Gets the expense Account matching the given full name.
+     *
+     * @param pFullName		    the full name
+     * @return			    the expense Account of that full name
+     * @since			    1.0.0
+     */
     protected Account getExpenseAccount(String pFullName) {
 	return expensesNode.getAccount(pFullName);
     }
 
+    /**
+     * Adds new default accounts to this general ledger. This method removes
+     * all existing Accounts to add new default ones.
+     *
+     * @since		    1.0.0
+     */
     public void addNewDefaultAccounts() {
 	addNewDefaultAssetAccounts();
 	addNewDefaultLiabilityAccounts();
@@ -268,9 +478,12 @@ public class GeneralLedger extends BaseModel {
 	addNewDefaultExpenseAccounts();
     }
 
+
     private void addNewDefaultAssetAccounts() {
 	ResourceMap vRmap = JAccounting.getApplication().getContext().getResourceMap(this.getClass());
 	
+	assetsNode.removeAllChildren();
+
 	AssetAccount vCurrAssets = new AssetAccount(-1, vRmap.getString("defaultAccounts.currentAssets.name"),
 		vRmap.getString("defaultAccounts.currentAssets.description"),
 		0.0, true);
@@ -369,6 +582,8 @@ public class GeneralLedger extends BaseModel {
     private void addNewDefaultLiabilityAccounts() {
 	ResourceMap vRmap = JAccounting.getApplication().getContext().getResourceMap(this.getClass());
 
+	liabilitiesNode.removeAllChildren();
+
 	LiabilityAccount vCurrLiabilities = new LiabilityAccount(-1, vRmap.getString("defaultAccounts.currentLiabilities.name"),
 		vRmap.getString("defaultAccounts.currentLiabilities.description"),
 		0.0, true);
@@ -430,6 +645,8 @@ public class GeneralLedger extends BaseModel {
     private void addNewDefaultEquityAccounts() {
 	ResourceMap vRmap = JAccounting.getApplication().getContext().getResourceMap(this.getClass());
 
+	equityNode.removeAllChildren();
+
 	EquityAccount vInitialCapital = new EquityAccount(-1, vRmap.getString("defaultAccounts.initialCapital.name"),
 		vRmap.getString("defaultAccounts.initialCapital.description"),
 		0.0, true);
@@ -439,6 +656,8 @@ public class GeneralLedger extends BaseModel {
 
     private void addNewDefaultRevenueAccounts() {
 	ResourceMap vRmap = JAccounting.getApplication().getContext().getResourceMap(this.getClass());
+
+	revenuesNode.removeAllChildren();
 
 	RevenueAccount earnedIncomes = new RevenueAccount(-1, vRmap.getString("defaultAccounts.earnedIncomes.name"),
 		vRmap.getString("defaultAccounts.earnedIncomes.description"),
@@ -533,6 +752,8 @@ public class GeneralLedger extends BaseModel {
 
     private void addNewDefaultExpenseAccounts() {
 	ResourceMap vRmap = JAccounting.getApplication().getContext().getResourceMap(this.getClass());
+
+	expensesNode.removeAllChildren();
 
 	ExpenseAccount adjustment = new ExpenseAccount(-1, vRmap.getString("defaultAccounts.adjustment.name"),
 		vRmap.getString("defaultAccounts.adjustment.description"),

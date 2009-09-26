@@ -124,7 +124,8 @@ public class AccountLedgerView extends JPanel implements Observer {
 	    if (vEntry.getType() == TransactionEntry.Type.DEBIT) {
 		vData[vIndex][1] = vRmap.getString("debitorText", vAcct.getName(),
 				    vTrans.getMemo());
-	    } else if (vEntry.getType() == TransactionEntry.Type.CREDIT) {
+	    }
+	    else if (vEntry.getType() == TransactionEntry.Type.CREDIT) {
 		vData[vIndex][2] = vRmap.getString("creditorText", vAcct.getName(),
 				    vTrans.getMemo());
 	    }

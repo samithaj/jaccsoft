@@ -303,16 +303,12 @@ public class PersistenceHandler {
 	    vId = new BigInteger(vEl.getAttributeValue("id"));
 	    vEnt = idTransactionEntries.get(vId);
 	    if (vEnt == null) {
-		/*Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Failed to retrieve Transaction Entry of id " + vId);
-		continue;*/
 		throw new UnPersistenceFailureException();
 	    }
 
 	    vAcctId = new BigInteger(vEl.getChildTextTrim("ref-Account"));
 	    vAcct = idAccounts.get(vAcctId);
 	    if (vAcct == null) {
-		/*Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Failed to retrieve Account of id " + vAcctId);
-		continue;*/
 		throw new UnPersistenceFailureException();
 	    }
 
