@@ -19,7 +19,7 @@ is divided into following sections:
   - cleanup
 
         -->
-<project xmlns:j2seproject1="http://www.netbeans.org/ns/j2se-project/1" xmlns:j2seproject3="http://www.netbeans.org/ns/j2se-project/3" xmlns:jaxrpc="http://www.netbeans.org/ns/j2se-project/jax-rpc" basedir="../" default="default" name="JAccounting-impl">
+<project xmlns:j2seproject1="http://www.netbeans.org/ns/j2se-project/1" xmlns:j2seproject3="http://www.netbeans.org/ns/j2se-project/3" xmlns:jaxrpc="http://www.netbeans.org/ns/j2se-project/jax-rpc" basedir=".." default="default" name="JAccounting-impl">
     <fail message="Please build using Ant 1.7.0 or higher.">
         <condition>
             <not>
@@ -232,10 +232,10 @@ is divided into following sections:
                     <classpath>
                         <path path="${run.test.classpath}"/>
                     </classpath>
-                    <syspropertyset>
+                    <!--<syspropertyset>
                         <propertyref prefix="test-sys-prop."/>
                         <mapper from="test-sys-prop.*" to="*" type="glob"/>
-                    </syspropertyset>
+                    </syspropertyset>-->
                     <formatter type="brief" usefile="false"/>
                     <formatter type="xml"/>
                     <jvmarg line="${run.jvmargs}"/>
