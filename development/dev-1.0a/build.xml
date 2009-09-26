@@ -81,7 +81,7 @@
     </fail>
 
     <target name="-post-jar">
-        <CBRelease file="${dist.jar.resolved}r" />
+        <CBRelease file="${dist.jar.resolved}" />
     </target>
 
     <target depends="init" name="-do-clean">
