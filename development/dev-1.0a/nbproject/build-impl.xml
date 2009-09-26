@@ -218,8 +218,8 @@ is divided into following sections:
         </macrodef>
     </target>
     <target name="-init-macrodef-junit">
-        <!--<<macrodef name="junit" uri="http://www.netbeans.org/ns/j2se-project/3">
-            attribute default="${includes}" name="includes"/>
+        <macrodef name="junit" uri="http://www.netbeans.org/ns/j2se-project/3">
+            <!--<attribute default="${includes}" name="includes"/>
             <attribute default="${excludes}" name="excludes"/>
             <attribute default="**" name="testincludes"/>
             <sequential>
@@ -240,8 +240,8 @@ is divided into following sections:
                     <formatter type="xml"/>
                     <jvmarg line="${run.jvmargs}"/>
                 </junit>
-            </sequential>
-        </macrodef>-->
+            </sequential>-->
+        </macrodef>
     </target>
     <target depends="-init-debug-args" name="-init-macrodef-nbjpda">
         <macrodef name="nbjpdastart" uri="http://www.netbeans.org/ns/j2se-project/1">
