@@ -66,12 +66,25 @@ public class JournalController extends BaseController {
 	JTabbedPane vTabsCont = JAccounting.getApplication().getView().getTabsContainer();
 	int vIndex = vTabsCont.indexOfTab(vRmap.getString("title"));
 
+<<<<<<< .mine
+	if (vIndex != -1) {
+	    return (JournalView) vTabsCont.getComponentAt(vIndex);
+=======
 	if (vIndex != -1) {
 	    return (JournalView) vTabsCont.getComponentAt(vIndex);
 	}
 
 	return null;
+>>>>>>> .r71
     }
+
+<<<<<<< .mine
+	return null;
+    }
+=======
+    protected ModifyTransactionBox getOrCreateModifyTransactionBox() {
+	ModifyTransactionBox rBox = JAccounting.getApplication().getView().getModifyTransactionBox();
+>>>>>>> .r71
 
     protected ModifyTransactionBox getOrCreateModifyTransactionBox() {
 	ModifyTransactionBox rBox = JAccounting.getApplication().getView().getModifyTransactionBox();
@@ -190,10 +203,17 @@ public class JournalController extends BaseController {
 		vDebitAccount = getFullNameAccount((String)vBox.getDebitAccountInput().getSelectedItem());
 		vCreditAccount = getFullNameAccount((String)vBox.getCreditAccountInput().getSelectedItem());
 		// attempt to update transaction from modify box field values
+<<<<<<< .mine
+		vErrors = vTransaction.updateProperties((Date)vBox.getDateInput().getValue(),
+						vBox.getRefNoInput().getText(),
+						vBox.getMemoInput().getText(),
+						vAmount, vDebitAccount, vCreditAccount);
+=======
 		vErrors = vTransaction.updateProperties((Date)vBox.getDateInput().getValue(),
 							vBox.getRefNoInput().getText(),
 							vBox.getMemoInput().getText(),
 							vAmount, vDebitAccount, vCreditAccount);
+>>>>>>> .r71
 	    }
 
 	    if (vErrors.isEmpty()) {

@@ -65,12 +65,23 @@ public class Journal extends BaseModel {
 
     public void removeTransaction(int vRow) {
 	Transaction vTrans;
+<<<<<<< .mine
+	if ((vTrans=transactions.remove(vRow)) != null) {
+	    vTrans.removeEntriesFromAccounts();
+		setChangedAndNotifyObservers();
+	    }
+=======
 	if ((vTrans=transactions.remove(vRow)) != null) {
 	    vTrans.removeEntriesFromAccounts();
 	    setChangedAndNotifyObservers();
+>>>>>>> .r71
 	}
+<<<<<<< .mine
+
+=======
     }
 
+>>>>>>> .r71
     public void removeTransactions(List<Transaction> pTransactions) {
 	Transaction vTrans;
 	ListIterator vIt = transactions.listIterator();
@@ -78,9 +89,13 @@ public class Journal extends BaseModel {
 	while (vIt.hasNext()) {
 	    vTrans = (Transaction) vIt.next();
 	    if (transactions.remove(vTrans)) {
+<<<<<<< .mine
 		vTrans.removeEntriesFromAccounts();
+		}
+=======
+		vTrans.removeEntriesFromAccounts();
+>>>>>>> .r71
 	    }
-	}
 
 	setChangedAndNotifyObservers();
     }

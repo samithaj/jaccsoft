@@ -76,11 +76,16 @@ public class AccountTreeNode extends DefaultMutableTreeNode {
 		vName = pFullName.substring(vIndex+1);
 		Enumeration vChildren = children();
 		while (vChildren.hasMoreElements()) {
+<<<<<<< .mine
 		    rAcct = ((AccountTreeNode) vChildren.nextElement()).getAccount(vName);
 		    if (rAcct != null) break;
+		    }
+=======
+		    rAcct = ((AccountTreeNode) vChildren.nextElement()).getAccount(vName);
+		    if (rAcct != null) break;
+>>>>>>> .r71
 		}
 	    }
-	}
 
 	return rAcct;
     }
@@ -90,10 +95,17 @@ public class AccountTreeNode extends DefaultMutableTreeNode {
 
 	Enumeration vChildren = children();
 	while (vChildren.hasMoreElements()) {
+<<<<<<< .mine
+	    rAcct = (Account) ((AccountTreeNode) vChildren.nextElement()).getUserObject();
+	    if (rAcct.getName().equals(pName)) break;
+	    else rAcct = null;
+	    }
+=======
 	    rAcct = (Account) ((AccountTreeNode) vChildren.nextElement()).getUserObject();
 	    if (rAcct.getName().equals(pName)) break;
 	    else rAcct = null;
 	}
+>>>>>>> .r71
 
 	return rAcct;
     }
@@ -102,4 +114,8 @@ public class AccountTreeNode extends DefaultMutableTreeNode {
 	return (getChildAccountWithName(pName) == null);
     }
 
+<<<<<<< .mine
+	}
+=======
 }
+>>>>>>> .r71

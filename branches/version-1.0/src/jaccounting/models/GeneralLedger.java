@@ -27,8 +27,13 @@ public class GeneralLedger extends BaseModel {
     public GeneralLedger() {
 	ResourceMap vRmap = JAccounting.getApplication().getContext().getResourceMap(this.getClass());
 
+<<<<<<< .mine
+	AssetAccount vAssets = new AssetAccount(-1, vRmap.getString("accountNames.assets"),
+			vRmap.getString("accountDescriptions.assets"),
+=======
 	AssetAccount vAssets = new AssetAccount(-1, vRmap.getString("accountNames.assets"),
 		vRmap.getString("accountDescriptions.assets"),
+>>>>>>> .r71
 		0.0, false);
 	LiabilityAccount vLiabilities = new LiabilityAccount(-1, vRmap.getString("accountNames.liabilities"),
 		vRmap.getString("accountDescriptions.liabilities"),
@@ -122,7 +127,11 @@ public class GeneralLedger extends BaseModel {
 	// skip root
 	vEnum.nextElement();
 	int vCurrRow = 0;
+<<<<<<< .mine
+	
+=======
 
+>>>>>>> .r71
 	while (vEnum.hasMoreElements()) {
 	    vCurrRow++;
 	    if (((Account)((AccountTreeNode)vEnum.nextElement()).getUserObject()).equals(pAcct)) {
@@ -146,15 +155,29 @@ public class GeneralLedger extends BaseModel {
     public void removeAccount(int pRow) {
 	AccountTreeNode vAcctNode = getAccountNodeAtRow(pRow);
 	if (vAcctNode != null && vAcctNode.canBeRemoved()) {
+<<<<<<< .mine
+	    vAcctNode.removeFromParent();
+	    List<Transaction> vTransactions = ((Account)vAcctNode.getUserObject()).getAccountTransactions();
+	    if (vTransactions != null) {
+		JAccounting.getApplication().getModelsMngr().getData().getJournal().removeTransactions(vTransactions);
+	    }
+		setChangedAndNotifyObservers();
+	    } 
+=======
 	    vAcctNode.removeFromParent();
 	    List<Transaction> vTransactions = ((Account)vAcctNode.getUserObject()).getAccountTransactions();
 	    if (vTransactions != null) {
 		JAccounting.getApplication().getModelsMngr().getData().getJournal().removeTransactions(vTransactions);
 	    }
 	    setChangedAndNotifyObservers();
+>>>>>>> .r71
 	}
+<<<<<<< .mine
+
+=======
     }
 
+>>>>>>> .r71
     public boolean canAccountBeRemoved(int pRow) {
 	AccountTreeNode vAcctNode = getAccountNodeAtRow(pRow);
 	if (vAcctNode != null) return vAcctNode.canBeRemoved();
@@ -226,11 +249,20 @@ public class GeneralLedger extends BaseModel {
 	    return rAcct;
 	}
 
+<<<<<<< .mine
+	rAcct = expensesNode.getAccount(pFullName);
+	if (rAcct != null) {
+=======
 	rAcct = expensesNode.getAccount(pFullName);
 	if (rAcct != null) {
 	    return rAcct;
 	}
 
+>>>>>>> .r71
+	return rAcct;
+    }
+
+<<<<<<< .mine
 	return rAcct;
     }
 
@@ -239,7 +271,15 @@ public class GeneralLedger extends BaseModel {
 	if (vAcct != null) return vAcct.isTransactionsEnabled();
 	return false;
     }*/
+
+=======
+    /*public boolean canAccountHaveTransactions(int pRow) {
+	Account vAcct = getAccount(pRow);
+	if (vAcct != null) return vAcct.isTransactionsEnabled();
+	return false;
+    }*/
     
+>>>>>>> .r71
     public void addNewDefaultAccounts() {
 	ResourceMap vRmap = JAccounting.getApplication().getContext().getResourceMap(GeneralLedger.class);
 
@@ -261,5 +301,10 @@ public class GeneralLedger extends BaseModel {
 
 	//setChangedAndNotifyObservers();
     }
+<<<<<<< .mine
+
+    }
+=======
     
 }
+>>>>>>> .r71

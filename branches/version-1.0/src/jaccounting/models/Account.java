@@ -91,8 +91,13 @@ public abstract class Account extends BaseModel {
     }
 
     public static Account createAccount(int number, String name, String description,
+<<<<<<< .mine
+		double balance, Type type, List<TransactionEntry> entries,
+	    boolean allowTransactions) throws GenericException {
+=======
 	    double balance, Type type, List<TransactionEntry> entries,
 	    boolean allowTransactions) throws GenericException {
+>>>>>>> .r71
 	Account rAccount = null;
 
 	switch (type) {
