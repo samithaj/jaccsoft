@@ -1,6 +1,21 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * JournalView.java		1.0.0		09/2009
+ * This file contains the journal interface class of the JAccounting application.
+ *
+ * JAccounting - Basic Double Entry Accounting Software.
+ * Copyright (c) 2009 Boubacar Diallo.
+ *
+ * This software is free: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software.  If not, see http://www.gnu.org/licenses.
  */
 
 package jaccounting.views;
@@ -23,24 +38,52 @@ import javax.swing.table.TableColumnModel;
 import org.jdesktop.application.ResourceMap;
 
 /**
+ * JournalView is the gui class for the journal interface. A JournalView object
+ * lists all the transactionsView in the Journal model. It notifies the JournalController
+ * of selection changes from the user.
  *
- * @author bouba
+ * @author	    Boubacar Diallo
+ * @version	    1.0.0
+ * @see		    jaccounting.controllers.JournalController
+ * @see		    jaccounting.models.Journal
+ * @since	    1.0.0
  */
 public class JournalView extends JPanel implements Observer {
 
     private JournalController controller;
-    private Journal mModel;
-    private TransactionsView transactions;
+
+    private Journal appModel;
+
+    private TransactionsView transactionsView;
 
 
+    /**
+     * Sole constructor. This constructor initializes this view's controller and
+     * model, creates its gui components and observes its model object.
+     *
+     * @param controller	    the controller; a JournalController
+     * @param model		    the model; a Journal
+     * @see			    jaccounting.controllers.JournalController
+     * @see			    jaccounting.models.Journal
+     * @since			    1.0.0
+     */
     public JournalView(JournalController controller, Journal model) {
 	this.controller = controller;
-	this.mModel = model;
+	this.appModel = model;
 
 	initComponents();
-	this.mModel.addObserver(this);
+	this.appModel.addObserver(this);
     }
 
+
+    /**
+     * Handles change notifications from this view's model. This method simply
+     * re-initializes this view and redraws it.
+     *
+     * @param o			the object being observed by this view
+     * @param arg		additional information about the change
+     * @since			1.0.0
+     */
     public void update(Observable o, Object arg) {
 	handleModelChanged();
     }
@@ -60,19 +103,19 @@ public class JournalView extends JPanel implements Observer {
 			       vRmap.getString("columnNames.particulars"), vRmap.getString("columnNames.debitAmount"),
 			       vRmap.getString("columnNames.creditAmount") };
 	Object[][] vData = buildGridData();
-	transactions = new TransactionsView(vData, vColNames);
+	transactionsView = new TransactionsView(vData, vColNames);
 
-	JScrollPane vPane = new JScrollPane(transactions);
+	JScrollPane vPane = new JScrollPane(transactionsView);
 	add(vPane);
     }
 
     private Object[][] buildGridData() {
-	Object[][] rData = new Object[mModel.getTransactions().size()][5];
+	Object[][] rData = new Object[appModel.getTransactions().size()][5];
 	ResourceMap vRmap = JAccounting.getApplication().getContext().getResourceMap(this.getClass());
 	int vIndex = 0;
 	Transaction vTrans;
 	
-	ListIterator vIt = mModel.getTransactions().listIterator();
+	ListIterator vIt = appModel.getTransactions().listIterator();
 	while (vIt.hasNext()) {
 	    vTrans = (Transaction) vIt.next();
 	   
@@ -91,22 +134,39 @@ public class JournalView extends JPanel implements Observer {
     }
 
     private void transactionsSelectionChanged() {
-	int vRow = transactions.getSelectedRow();
+	int vRow = transactionsView.getSelectedRow();
+	
 	if (vRow >= 0) {
 	    controller.transactionSelected(vRow);
-	} else {
+	}
+	else {
 	    controller.noTransactionSelected();
 	}
     }
 
+    /**
+     * Gets the currently selected Transaction object. This method effectively gets
+     * the currently selected row and asks the Journal for the corresponding
+     * Transaction object.
+     *
+     * @return		    the currently selected Transaction or null
+     * @see		    #getCurrentlySelectedRow()
+     * @see		    jaccounting.models.Journal#getTransaction(int)
+     * @since		    1.0.0
+     */
     public Transaction getCurrentlySelectedTransaction() {
 	int vIndex = getCurrentlySelectedRow();
-	if (vIndex == -1) return null;
-	return mModel.getTransaction(vIndex);
+	return (vIndex == -1) ? null : appModel.getTransaction(vIndex);
     }
 
+    /**
+     * Gets the currently selected row number.
+     *
+     * @return		    the currently selected row or -1
+     * @since		    1.0.0
+     */
     public int getCurrentlySelectedRow() {
-	return transactions.getSelectedRow();
+	return transactionsView.getSelectedRow();
     }
 
     private class TransactionsView extends JTable {

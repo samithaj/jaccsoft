@@ -1,5 +1,21 @@
 /*
- * MainView.java
+ * MainView.java	    1.0.0	    09/2009
+ * This file contains the main window class of the JAccounting application.
+ *
+ * JAccounting - Basic Double Entry Accounting Software.
+ * Copyright (c) 2009 Boubacar Diallo.
+ *
+ * This software is free: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software.  If not, see http://www.gnu.org/licenses.
  */
 
 package jaccounting;
@@ -11,6 +27,8 @@ import jaccounting.models.GeneralLedger;
 import jaccounting.views.ModifyAccountBox;
 import jaccounting.views.ModifyTransactionBox;
 import java.util.Observable;
+import javax.swing.JLabel;
+import javax.swing.JProgressBar;
 import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import org.jdesktop.application.Action;
@@ -30,33 +48,59 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeListener;
 
 /**
- * The application's main frame.
+ * MainView is the application's main frame class. A MainView object holds references
+ * to all the major gui components of the application including the standard tools bar,
+ * the general ledger tools bar, the journal tools bar, the content tabbed pane,
+ * the status panel, the account adding/editing dialog, the transaction adding/editing
+ * dialog and the application's information dialog. It also manages the display of
+ * options dialogs to the ask the user for confirmation of actions.
+ *
+ * @author	    Boubacar Diallo
+ * @version	    1.0.0
+ * @since	    1.0.0
  */
 public class MainView extends FrameView implements ChangeListener, Observer {
 
+    private final Timer messageTimer;			// timer for status message
+
+    private final Timer busyIconTimer;			// timer for busy icon
+
+    private final Icon idleIcon;
+
+    private final Icon[] busyIcons = new Icon[15];
+
+    private int busyIconIndex = 0;
+
+    private JDialog aboutBox;				// dialog window about the application
+
+    private ModifyAccountBox modifyAccountBox;		// dialog window to add/edit an account
+
+    private ModifyTransactionBox modifyTransactionBox;	// dialog window to add/edit a transaction
+
+    private JOptionPane confirmActionBox;		// dialog box to confirm user actions
+
+    
+    /**
+     * Sole Constructor. Initializes the main window components.
+     *
+     * @param app	the SingleFrameApplication whose main frame this is
+     * @since		1.0.0
+     */
     public MainView(SingleFrameApplication app) {
         super(app);
 
         initComponents();
-
         generalLedgerToolsBar.setVisible(false);
+	journalToolsBar.setVisible(false);
 	tabsContainer.addChangeListener(this);
-<<<<<<< .mine
-	ResourceMap vRmap = JAccounting.getApplication().getContext().getResourceMap(this.getClass());
-	vRmap.injectComponents(getComponent());
 	
-=======
-	ResourceMap vRmap = JAccounting.getApplication().getContext().getResourceMap(this.getClass());
-	vRmap.injectComponents(getComponent());
-
-        // status bar initialization - message timeout, idle icon and busy animation, etc
 >>>>>>> .r71
 <<<<<<< .mine
 	// status bar initialization - message timeout, idle icon and busy animation, etc
 =======
         ResourceMap resourceMap = getResourceMap();
->>>>>>> .r71
-        ResourceMap resourceMap = getResourceMap();
+	resourceMap.injectComponents(getComponent());
+	// status bar initialization - message timeout, idle icon and busy animation, etc
         int messageTimeout = resourceMap.getInteger("StatusBar.messageTimeout");
         messageTimer = new Timer(messageTimeout, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -110,6 +154,97 @@ public class MainView extends FrameView implements ChangeListener, Observer {
         });
     }
 
+    
+    /**
+     * Gets the content panel's tabbed pane
+     * @return		the content tabbed pane
+     * @since		1.0.0
+     */
+    public javax.swing.JTabbedPane getTabsContainer() {
+        return tabsContainer;
+    }
+
+    /**
+     * Gets the general ledger tools bar
+     * @return		the general ledger tools bar
+     * @since		1.0.0
+     */
+    public JToolBar getGeneralLedgerToolsBar() {
+        return generalLedgerToolsBar;
+    }
+
+    /**
+     * Gets the journal tools bar
+     * @return		the journal tools bar
+     * @since		1.0.0
+     */
+    public JToolBar getJournalToolsBar() {
+	return journalToolsBar;
+    }
+
+    /**
+     * Gets the progress bar contained in the status panel
+     * @return		the progress bar
+     * @since		1.0.0
+     */
+    public JProgressBar getProgressBar() {
+	return progressBar;
+    }
+
+    /**
+     * Gets the status message label contained in the status panel
+     * @return		the status message label
+     * @since		1.0.0
+     */
+    public JLabel getStatusMessageLabel() {
+	return statusMessageLabel;
+    }
+
+    /**
+     * Gets the dialog to add/edit an account
+     * @return		the dialog to add/edit an account
+     * @since		1.0.0
+     */
+    public ModifyAccountBox getModifyAccountBox() {
+        return modifyAccountBox;
+    }
+
+    /**
+     * Sets the dialog to add/edit an account
+     * @param modifyAccountBox		a dialog to add/edit an account
+     * @since				1.0.0
+     */
+    public void setModifyAccountBox(ModifyAccountBox modifyAccountBox) {
+        this.modifyAccountBox = modifyAccountBox;
+    }
+
+    /**
+     * Gets the dialog to add/edit a transaction
+     * @return		the dialog to add/edit a transaction
+     * @since		1.0.0
+     */
+    public ModifyTransactionBox getModifyTransactionBox() {
+	return modifyTransactionBox;
+    }
+
+    /**
+     * Sets the dialog to add/edit a transaction
+     * @param modifyTransactionBox	    a dialog to add/edit a transaction
+     * @since				    1.0.0
+     */
+    public void setModifyTransactionBox(ModifyTransactionBox modifyTransactionBox) {
+	this.modifyTransactionBox = modifyTransactionBox;
+    }
+
+
+    /**
+     * Shows the application's information dialog box. If the {@code aboutBox}
+     * property is null,this methods creates a new {@code AboutBox} before
+     * displaying the dialog.
+     *
+     * @see		AboutBox
+     * @since		1.0.0
+     */
     @Action
     public void showAboutBox() {
         if (aboutBox == null) {
@@ -118,6 +253,109 @@ public class MainView extends FrameView implements ChangeListener, Observer {
             aboutBox.setLocationRelativeTo(mainFrame);
         }
         JAccounting.getApplication().show(aboutBox);
+    }
+
+    /**
+     * Displays a message in a modal option pane to ask for the user's confirmation.
+     * The options given to the user are "OK" and "Cancel".
+     *
+     * @param pMessage	    the message to display to the user. It can be a gui
+     *			    component that will be rendered or any object whose
+     *			    {@code String} value will be displayed.
+     * @return		    {@code true} if the user chose "OK",
+     *			    {@code false} if the user chose "Cancel"
+     * @since		    1.0.0
+     */
+    public boolean showConfirmActionBox(Object pMessage) {
+	String vTitle = getResourceMap().getString("confirmActionBox.title");
+	initConfirmActionBox(pMessage);
+	return	(showOptionDialog(confirmActionBox, vTitle) == JOptionPane.OK_OPTION)
+		? true
+		: false;
+    }
+
+    private void initConfirmActionBox(Object pMessage) {
+	confirmActionBox = new JOptionPane(pMessage, JOptionPane.QUESTION_MESSAGE,
+					   JOptionPane.OK_CANCEL_OPTION);
+    }
+
+    private int showOptionDialog(JOptionPane pPane, String pTitle) {
+	JDialog vDialog = pPane.createDialog(pTitle);
+	vDialog.show();
+	Object vVal = pPane.getValue();
+	return	(vVal == null)
+		? JOptionPane.CLOSED_OPTION
+		: (vVal instanceof Integer ? ((Integer)vVal).intValue() : JOptionPane.CLOSED_OPTION);
+    }
+
+    /**
+     * Handles change events of the content tabbed pane. Notifies the
+     * {@code MainController} of the selected tab or that no tab is selected.
+     *
+     * @param e		the change event
+     * @see		jaccounting.controllers.MainController
+     * @since		1.0.0
+     */
+    public void stateChanged(ChangeEvent e) {
+	if (((JTabbedPane)e.getSource()).equals(tabsContainer)) {
+	    tabsContainerStateChanged();
+	}
+    }
+
+    private void tabsContainerStateChanged() {
+	int vIndex = tabsContainer.getSelectedIndex();
+	if (vIndex != -1) {
+	    MainController.getInstance().tabSelected(vIndex);
+	}
+	else {
+	    MainController.getInstance().noTabSelected();
+	}
+    }
+
+    /**
+     * Initializes the main frame for a newly loaded set of application data
+     * by clearing the content tabbed pane and observing the {@code GeneralLedger}
+     * to update the content tabbed pane when accounts get added or removed.
+     *
+     * @see		jaccounting.models.GeneralLedger
+     * @since		1.0.0
+     */
+    public void initForNewData() {
+	tabsContainer.removeAll();
+	JAccounting.getApplication().getModelsMngr().getData()
+		    .getGeneralLedger().addObserver(this);
+    }
+
+    /**
+     * Handles change notifications from the {@code GeneralLedger}. This method
+     * closes the openned tabs of accounts that are no longer in the
+     * {@code GeneralLedger}.
+     *
+     * @param o		the general ledger being observed
+     * @param arg	further details about the change
+     * @see		jaccounting.models.GeneralLedger
+     * @since		1.0.0
+     */
+    public void update(Observable o, Object arg) {
+	if (o instanceof GeneralLedger) {
+	    int vIndex = tabsContainer.getTabCount() -1;
+	    // remove tabs of deleted accounts
+	    while (vIndex > 1) {
+		if (((GeneralLedger) o).getAccount(tabsContainer.getToolTipTextAt(vIndex)) == null) {
+		    tabsContainer.remove(vIndex);
+		    vIndex--;
+		}
+		vIndex--;
+	    }
+	}
+    }
+
+    /**
+     * Closes the currently visible tab of the content tabbed pane
+     * @since		1.0.0
+     */
+    public void closeCurrentTab() {
+	tabsContainer.remove(tabsContainer.getSelectedIndex());
     }
 
     /** This method is called from within the constructor to
@@ -352,139 +590,6 @@ public class MainView extends FrameView implements ChangeListener, Observer {
     private javax.swing.JTabbedPane tabsContainer;
     // End of variables declaration//GEN-END:variables
 
-<<<<<<< .mine
-    private final Timer messageTimer;
-    private final Timer busyIconTimer;
-    private final Icon idleIcon;
-    private final Icon[] busyIcons = new Icon[15];
-    private int busyIconIndex = 0;
-
-    private JDialog aboutBox;
-
-    private ModifyAccountBox modifyAccountBox;
-
-    private ModifyTransactionBox modifyTransactionBox;
-
-    private JOptionPane confirmActionBox;
-
-    private JOptionPane userMessageBox;
-
-    public javax.swing.JTabbedPane getTabsContainer() {
-        return tabsContainer;
-=======
-    private final Timer messageTimer;
-    private final Timer busyIconTimer;
-    private final Icon idleIcon;
-    private final Icon[] busyIcons = new Icon[15];
-    private int busyIconIndex = 0;
-
-    private JDialog aboutBox;
-
-    private ModifyAccountBox modifyAccountBox;
-
-    private ModifyTransactionBox modifyTransactionBox;
-
-    private JOptionPane confirmActionBox;
-
-    private JOptionPane userMessageBox;
-
-    public javax.swing.JTabbedPane getTabsContainer() {
-        return tabsContainer;
-    }
-
-    public JToolBar getGeneralLedgerToolsBar() {
-        return generalLedgerToolsBar;
-    }
-
-    public JToolBar getJournalToolsBar() {
-	return journalToolsBar;
-    }
-
-    public ModifyAccountBox getModifyAccountBox() {
-        return modifyAccountBox;
-    }
-
-    public void setModifyAccountBox(ModifyAccountBox modifyAccountBox) {
-        this.modifyAccountBox = modifyAccountBox;
-    }
-
-    public ModifyTransactionBox getModifyTransactionBox() {
-	return modifyTransactionBox;
-    }
-
-    public void setModifyTransactionBox(ModifyTransactionBox modifyTransactionBox) {
-	this.modifyTransactionBox = modifyTransactionBox;
-    }
-
-    public boolean showConfirmActionBox(Object pMessage) {
-	ResourceMap vRmap = JAccounting.getApplication().getContext().getResourceMap(this.getClass());
-	String vTitle = vRmap.getString("confirmActionBox.title");
-	initConfirmActionBox(pMessage);
-	return showOptionDialog(confirmActionBox, vTitle) == JOptionPane.OK_OPTION ? true : false;
-    }
-
-    public void showUserMessageBox(Object pMessage, int pMessageType, int pOptionType, Object[] pOptions) {
-	ResourceMap vRmap = JAccounting.getApplication().getContext().getResourceMap(this.getClass());
-	String vTitle = vRmap.getString("userMessageBox.title");
-	initUserMessageBox(pMessage);
-	showOptionDialog(userMessageBox, vTitle);
-    }
-
-    private void initConfirmActionBox(Object pMessage) {
-	confirmActionBox = new JOptionPane(pMessage, JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
-    }
-
-    private void initUserMessageBox(Object pMessage) {
-	userMessageBox = new JOptionPane(pMessage, JOptionPane.INFORMATION_MESSAGE, JOptionPane.OK_OPTION);
-    }
-
-    private int showOptionDialog(JOptionPane pPane, String pTitle) {
-	JDialog vDialog = pPane.createDialog(pTitle);
-	vDialog.show();
-	Object rVal = pPane.getValue();
-	return (rVal == null) ? JOptionPane.CLOSED_OPTION :
-	    (rVal instanceof Integer ? ((Integer)rVal).intValue() : JOptionPane.CLOSED_OPTION);
-    }
-
-    public void stateChanged(ChangeEvent e) {
-	if (((JTabbedPane)e.getSource()).equals(tabsContainer)) {
-	    tabsContainerStateChanged();
-	}
-    }
-
-    private void tabsContainerStateChanged() {
-	int vIndex = tabsContainer.getSelectedIndex();
-	if (vIndex != -1) {
-	    MainController.getInstance().tabSelected(vIndex);
-	} else {
-	    MainController.getInstance().noTabSelected();
-	}
-    }
-
-    public void newDataLoaded() {
-	tabsContainer.removeAll();
-	JAccounting.getApplication().getModelsMngr().getData()
-		    .getGeneralLedger().addObserver(this);
-    }
-
-    public void update(Observable o, Object arg) {
-	if (o instanceof GeneralLedger) {
-	    int vIndex = tabsContainer.getTabCount() -1;
-	    // close tabs of deleted accounts
-	    while (vIndex > 1) {
-		if (((GeneralLedger) o).getAccount(tabsContainer.getToolTipTextAt(vIndex)) == null) {
-		    tabsContainer.remove(vIndex);
-		    vIndex--;
-		}
-		vIndex--;
-	    }
-	}
-    }
-
-    public void closeCurrentTab() {
-	tabsContainer.remove(tabsContainer.getSelectedIndex());
-    }
-
 >>>>>>> .r71
 }
 
@@ -581,4 +686,3 @@ public class MainView extends FrameView implements ChangeListener, Observer {
 	tabsContainer.remove(tabsContainer.getSelectedIndex());
     }
 
-}

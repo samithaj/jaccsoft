@@ -1,6 +1,21 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * AccountLedgerView.java		1.0.0		09/2009
+ * This file contains the account ledger interface class of the JAccounting application.
+ *
+ * JAccounting - Basic Double Entry Accounting Software.
+ * Copyright (c) 2009 Boubacar Diallo.
+ *
+ * This software is free: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software.  If not, see http://www.gnu.org/licenses.
  */
 
 package jaccounting.views;
@@ -23,23 +38,54 @@ import javax.swing.table.TableColumnModel;
 import org.jdesktop.application.ResourceMap;
 
 /**
+ * AccountLedgerView is the gui class for the account ledger interface. An
+ * AccountLedgerView object displays all transaction entries associated with
+ * an account.
  *
- * @author bouba
+ * @author	    Boubacar Diallo
+ * @version	    1.0.0
+ * @see		    jaccounting.controllers.AccountLedgerController
+ * @see		    jaccounting.models.Account
+ * @since	    1.0.0
  */
 public class AccountLedgerView extends JPanel implements Observer {
 
     private AccountLedgerController controller;
-    private Account mModel;
-    private EntriesView entries;
 
-    public AccountLedgerView(AccountLedgerController controller, Account mModel) {
+    /** the Account being represented by this view */
+    private Account appModel;
+
+    /** the gui object listing the entries in an Account */
+    private EntriesView entriesView;
+
+
+    /**
+     * Sole constructor. This constructor initializes this view's controller and
+     * model, creates its gui components and observes its model object.
+     *
+     * @param controller	    this view's controller; an AccountLedgerController
+     * @param appModel		    this view's model; an Account
+     * @see			    jaccounting.controllers.AccountLedgerController
+     * @see			    jaccounting.models.Account
+     * @since			    1.0.0
+     */
+    public AccountLedgerView(AccountLedgerController controller, Account appModel) {
 	this.controller = controller;
-	this.mModel = mModel;
+	this.appModel = appModel;
 
 	initComponents();
-	this.mModel.addObserver(this);
+	this.appModel.addObserver(this);
     }
 
+
+    /**
+     * Handles change notifications from this view's model. This method simply
+     * re-initializes this view and redraws it.
+     *
+     * @param o			the object being observed by this view
+     * @param arg		additional information about the change
+     * @since			1.0.0
+     */
     public void update(Observable o, Object arg) {
 	handleModelChanged();
     }
@@ -56,20 +102,19 @@ public class AccountLedgerView extends JPanel implements Observer {
 	add(vPane);
     }
 
-    private JTable buildEntriesView() {
-	Object[][] vData = new Object[mModel.getEntries().size()][6];
+    private EntriesView buildEntriesView() {
+	Object[][] vData = new Object[appModel.getEntries().size()][6];
 	ResourceMap vRmap = JAccounting.getApplication().getContext().getResourceMap(this.getClass());
 	int vIndex = 0;
 	TransactionEntry vEntry;
 	Transaction vTrans;
 	Account vAcct;
-
+	ListIterator vIt = appModel.getEntries().listIterator();
 	String[] vColNames = { vRmap.getString("columnNames.date"), vRmap.getString("columnNames.debitor"),
 			       vRmap.getString("columnNames.creditor"),
 			       vRmap.getString("columnNames.refNo"), vRmap.getString("columnNames.amount"),
 			       vRmap.getString("columnNames.balance")};
 
-	ListIterator vIt = mModel.getEntries().listIterator();
 	while (vIt.hasNext()) {
 	    vEntry = (TransactionEntry) vIt.next();
 	    vTrans = vEntry.getTransaction();
@@ -79,7 +124,8 @@ public class AccountLedgerView extends JPanel implements Observer {
 	    if (vEntry.getType() == TransactionEntry.Type.DEBIT) {
 		vData[vIndex][1] = vRmap.getString("debitorText", vAcct.getName(),
 				    vTrans.getMemo());
-	    } else if (vEntry.getType() == TransactionEntry.Type.CREDIT) {
+	    }
+	    else if (vEntry.getType() == TransactionEntry.Type.CREDIT) {
 		vData[vIndex][2] = vRmap.getString("creditorText", vAcct.getName(),
 				    vTrans.getMemo());
 	    }
@@ -90,8 +136,8 @@ public class AccountLedgerView extends JPanel implements Observer {
 	    vIndex++;
 	}
 
-	entries = new EntriesView(vData, vColNames);
-	return entries;
+	entriesView = new EntriesView(vData, vColNames);
+	return entriesView;
     }
 
 
@@ -102,6 +148,7 @@ public class AccountLedgerView extends JPanel implements Observer {
 	    customize();
 	}
 
+	
 	private void customize() {
 	    setColumnSelectionAllowed(false);
 	    setDragEnabled(false);
