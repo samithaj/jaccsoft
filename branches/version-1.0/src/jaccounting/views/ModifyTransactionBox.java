@@ -63,7 +63,6 @@ public class ModifyTransactionBox extends javax.swing.JDialog {
      * @see			    jaccounting.models.Transaction
      * @since			    1.0.0
      */
->>>>>>> .r71
     public ModifyTransactionBox(java.awt.Frame parent, JournalController pController) {
         super(parent, true);
 	controller = pController;

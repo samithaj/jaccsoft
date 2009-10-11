@@ -26,7 +26,6 @@ import jaccounting.ErrorCode;
 import jaccounting.models.Account;
 import jaccounting.models.GeneralLedger;
 import jaccounting.models.InvalidAccountTypeException;
-import jaccounting.models.NotTransactionnableAccountException;
 import jaccounting.views.GeneralLedgerView;
 import jaccounting.views.ModifyAccountBox;
 import java.util.HashMap;
@@ -115,7 +114,6 @@ public class GeneralLedgerController extends BaseController {
 	int vIndex = vTabsCont.indexOfTab(vRmap.getString("title"));
 
 	return (vIndex != -1) ? (GeneralLedgerView) vTabsCont.getComponentAt(vIndex) : null;
->>>>>>> .r71
     }
 
     /**
@@ -195,11 +193,8 @@ public class GeneralLedgerController extends BaseController {
 		    .log(Level.SEVERE, "Tried to create account while parent account '"
 					+ vAcct.getName() + "' had invalid type.", ex);
 	} 
-=======
-	} catch (GenericException ex) {
-	    Logger.getLogger(GeneralLedgerController.class.getName()).log(Level.SEVERE, null, ex);
->>>>>>> .r71
-	}
+
+    }
 
     /**
      * Opens the modal dialog box to edit the selected account in the general
@@ -338,7 +333,6 @@ public class GeneralLedgerController extends BaseController {
 		vErrors = vAcct.update(vNumber, vBox.getNameTextField().getText(),
 					vBox.getDescriptionTextField().getText());
 		JAccounting.getApplication().getProgressReporter().reportFinished();
->>>>>>> .r71
 	    }
 
 	    if (vErrors.isEmpty()) {

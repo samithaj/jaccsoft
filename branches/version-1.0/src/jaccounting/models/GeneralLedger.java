@@ -70,8 +70,7 @@ public class GeneralLedger extends BaseModel {
 	AssetAccount vAssets = new AssetAccount(-1, 
 			vRmap.getString("accountNames.assets"),
 			vRmap.getString("accountDescriptions.assets"),
->>>>>>> .r71
-		0.0, false);
+			0.0, false);
 	LiabilityAccount vLiabilities = new LiabilityAccount(-1,
 		vRmap.getString("accountNames.liabilities"),
 		vRmap.getString("accountDescriptions.liabilities"),
@@ -210,7 +209,6 @@ public class GeneralLedger extends BaseModel {
 	int vCurrRow = 0;
 	
 	vEnum.nextElement();		    // skip the root node
->>>>>>> .r71
 	while (vEnum.hasMoreElements()) {
 	    vCurrRow++;
 	    if (((Account)((AccountTreeNode)vEnum.nextElement()).getUserObject())
@@ -272,7 +270,6 @@ public class GeneralLedger extends BaseModel {
 		return true;
 	    } 
 	    catch (NotTransactionnableAccountException ex) { }
->>>>>>> .r71
 	}
 
 	return false;
@@ -409,7 +406,6 @@ public class GeneralLedger extends BaseModel {
 
 	rAcct = getExpenseAccount(pFullName);
 	
->>>>>>> .r71
 	return rAcct;
     }
 
@@ -474,7 +470,6 @@ public class GeneralLedger extends BaseModel {
      *
      * @since		    1.0.0
      */
->>>>>>> .r71
     public void addNewDefaultAccounts() {
 	addNewDefaultAssetAccounts();
 	addNewDefaultLiabilityAccounts();

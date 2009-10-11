@@ -149,7 +149,6 @@ public class Journal extends BaseModel {
 		return true;
 	    }
 	    catch (NotTransactionnableAccountException ex) { }
->>>>>>> .r71
 	}
 
 	return false;
@@ -175,11 +174,8 @@ public class Journal extends BaseModel {
 		    vTrans.unpostTransaction();
 		}
 		catch (NotTransactionnableAccountException ex) { }
-		}
-=======
-		vTrans.removeEntriesFromAccounts();
->>>>>>> .r71
 	    }
+	}
 
 	setChangedAndNotifyObservers();
     }

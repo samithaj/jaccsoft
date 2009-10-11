@@ -167,13 +167,10 @@ public class AccountTreeNode extends DefaultMutableTreeNode {
 		    if (rAcct != null) {
 			break;
 		    }
-		    }
-=======
-		    rAcct = ((AccountTreeNode) vChildren.nextElement()).getAccount(vName);
-		    if (rAcct != null) break;
->>>>>>> .r71
 		}
+
 	    }
+	}
 
 	return rAcct;
     }
@@ -191,13 +188,7 @@ public class AccountTreeNode extends DefaultMutableTreeNode {
 	    else {
 		rAcct = null;
 	    }
-	    }
-=======
-	    rAcct = (Account) ((AccountTreeNode) vChildren.nextElement()).getUserObject();
-	    if (rAcct.getName().equals(pName)) break;
-	    else rAcct = null;
 	}
->>>>>>> .r71
 
 	return rAcct;
     }

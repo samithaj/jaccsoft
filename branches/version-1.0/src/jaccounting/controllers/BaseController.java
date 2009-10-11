@@ -63,7 +63,6 @@ public abstract class BaseController {
         ActionEvent evt = new ActionEvent("no source", ActionEvent.ACTION_PERFORMED, "no command");
         JAccounting.getApplication().getContext().getActionMap(this.getClass(), this)
 	    .get(action).actionPerformed(evt);
->>>>>>> .r71
     }
 
     /**

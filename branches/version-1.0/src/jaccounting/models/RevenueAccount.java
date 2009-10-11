@@ -45,7 +45,6 @@ public class RevenueAccount extends Account {
     public RevenueAccount() {
 	super();
 	type = Type.REVENUE;
->>>>>>> .r71
     }
 
     /**
