@@ -117,12 +117,21 @@ public class PersistenceHandler {
 		    } else if (vKidName.equals("transactionsEnabled")) {
 			vTransEnabled = Boolean.parseBoolean(vText);
 		    }
+<<<<<<< .mine
+		}
+		vEntry = unserializeTransactionEntry("listEntry-"+vInd++, vKids);
+			while (vEntry != null) {
+			    vEntries.add(vEntry);
+		    vEntry = unserializeTransactionEntry("listEntry-"+vInd++, vKids);
+			}
+=======
 		}
 		vEntry = unserializeTransactionEntry("listEntry-"+vInd++, vKids);
 		while (vEntry != null) {
 		    vEntries.add(vEntry);
 		    vEntry = unserializeTransactionEntry("listEntry-"+vInd++, vKids);
 		}
+>>>>>>> .r71
 		try {
 		    rAcct = Account.createAccount(vNumber, vName, vDescription, vBalance,
 						 vType, vEntries, vTransEnabled);
@@ -131,8 +140,11 @@ public class PersistenceHandler {
 		} catch (GenericException ex) {
 
 		}
+<<<<<<< .mine
+		}
+=======
+>>>>>>> .r71
 	    }
-	}
 
 	return rAcct;
     }
@@ -220,10 +232,17 @@ public class PersistenceHandler {
 	    while (!vStop && transactionEntryElementsIterator.hasNext()) {
 		vEl = (Element) transactionEntryElementsIterator.next();
 		vId = new BigInteger(vEl.getAttributeValue("id"));
+<<<<<<< .mine
+		rEntry = new TransactionEntry(getAccountOfId(new BigInteger(vEl.getChildTextTrim("ref-Account"))),
+					     null,
+					     Enum.valueOf(TransactionEntry.Type.class, vEl.getChildTextTrim("Enum")),
+						Double.parseDouble(vEl.getChildTextTrim("double")));
+=======
 		rEntry = new TransactionEntry(getAccountOfId(new BigInteger(vEl.getChildTextTrim("ref-Account"))),
 					     null,
 					     Enum.valueOf(TransactionEntry.Type.class, vEl.getChildTextTrim("Enum")),
 					     Double.parseDouble(vEl.getChildTextTrim("double")));
+>>>>>>> .r71
 		idTransactionEntries.put(vId, rEntry);
 		if (vId.equals(pId)) vStop = true;
 	    }
@@ -249,6 +268,14 @@ public class PersistenceHandler {
 	reset();
     }
 
+<<<<<<< .mine
+    public Data unpersist(String pFilename) throws IOException, JDOMException {
+	InputStream vStream =  JAccounting.getApplication().getContext().getLocalStorage().openInputFile(pFilename);
+	Data rData;
+	    SAXBuilder vBuilder = new SAXBuilder();
+	Document vDoc = vBuilder.build(vStream);
+	    Element vRoot = vDoc.getRootElement();
+=======
     public Data unpersist(String pFilename) throws IOException, JDOMException {
 	InputStream vStream =  JAccounting.getApplication().getContext().getLocalStorage().openInputFile(pFilename);
 	Data rData;
@@ -262,7 +289,18 @@ public class PersistenceHandler {
 	rData = unserializeData(vRoot);
 	reset();
 	//Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Should unpersist now");
+>>>>>>> .r71
 
+<<<<<<< .mine
+	    accountElementsIterator = vRoot.getDescendants(new ElementFilter("Account"));
+	    transactionElementsIterator = vRoot.getDescendants(new ElementFilter("Transaction"));
+	    transactionEntryElementsIterator = vRoot.getDescendants(new ElementFilter("TransactionEntry"));
+	    rData = unserializeData(vRoot);
+	    reset();
+	//Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Should unpersist now");
+
+=======
+>>>>>>> .r71
 	return rData;
     }
 
@@ -431,7 +469,11 @@ public class PersistenceHandler {
     private Transaction unserializeTransaction(String pName, Element pRoot) {
 	Element vEl;
 	Transaction rTrans = null;
+<<<<<<< .mine
+=======
 
+	ListIterator vIt = pRoot.getChildren("Transaction").listIterator();
+>>>>>>> .r71
 	ListIterator vIt = pRoot.getChildren("Transaction").listIterator();
 	while (vIt.hasNext()) {
 	    vEl = (Element)vIt.next();

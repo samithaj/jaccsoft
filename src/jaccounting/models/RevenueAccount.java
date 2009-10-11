@@ -10,9 +10,15 @@ package jaccounting.models;
  * @author bouba
  */
 public class RevenueAccount extends Account {
+<<<<<<< .mine
+
+    protected RevenueAccount() {
+	this(-1, "", "", 0.0, true);
+=======
     
     protected RevenueAccount() {
 	this(-1, "", "", 0.0, true);
+>>>>>>> .r71
     }
 
     protected RevenueAccount(int number, String name, String description,

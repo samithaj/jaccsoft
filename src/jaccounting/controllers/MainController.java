@@ -28,7 +28,6 @@ import org.jdesktop.application.Task;
 public class MainController extends BaseController implements Observer {
     private boolean saveToFileEnabled;
     private boolean closeTabEnabled;
-    
     private MainController() {
 	support = new PropertyChangeSupport(this);
 	enableMainActions(false);

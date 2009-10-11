@@ -34,9 +34,15 @@ public class ModifyTransactionBox extends javax.swing.JDialog {
 
     private JournalController controller;
     private Transaction model;
+<<<<<<< .mine
+    private boolean isNew;
+
+    /** Creates new form ModifyTransactionBox */
+=======
     private boolean isNew;
     
     /** Creates new form ModifyTransactionBox */
+>>>>>>> .r71
     public ModifyTransactionBox(java.awt.Frame parent, JournalController pController) {
         super(parent, true);
 	controller = pController;

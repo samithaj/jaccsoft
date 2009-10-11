@@ -20,9 +20,15 @@ public abstract class BaseController {
 
     public void runAction(String action) {
         ActionEvent evt = new ActionEvent("no source", ActionEvent.ACTION_PERFORMED, "no command");
+<<<<<<< .mine
+        JAccounting.getApplication().getContext().getActionMap(this.getClass(),
+                                                              this)
+	    .get(action).actionPerformed(evt);
+=======
         JAccounting.getApplication().getContext().getActionMap(this.getClass(),
                                                               this)
                                                               .get(action).actionPerformed(evt);
+>>>>>>> .r71
     }
 
     public void addPropertyChangeListener(PropertyChangeListener l) {

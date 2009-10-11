@@ -120,9 +120,15 @@ public class GeneralLedgerView extends JPanel implements Observer {
 	DefaultMutableTreeNode vNode;
 	DefaultListModel rList = new DefaultListModel();
 
+<<<<<<< .mine
+	rList.addElement(" ");
+	vEnum = mModel.getRoot().preorderEnumeration();
+	vEnum.nextElement();		// skip root
+=======
 	rList.addElement(" ");
 	vEnum = mModel.getRoot().preorderEnumeration();
 	vEnum.nextElement(); // skip root
+>>>>>>> .r71
 	while (vEnum.hasMoreElements()) {
 	    vNode = (DefaultMutableTreeNode) vEnum.nextElement();
 	    vAcct = (Account) vNode.getUserObject();
@@ -138,9 +144,15 @@ public class GeneralLedgerView extends JPanel implements Observer {
 	DefaultMutableTreeNode vNode;
 	DefaultListModel rList = new DefaultListModel();
 
+<<<<<<< .mine
+	rList.addElement(" ");
+	vEnum = mModel.getRoot().preorderEnumeration();
+	vEnum.nextElement();		// skip root
+=======
 	rList.addElement(" ");
 	vEnum = mModel.getRoot().preorderEnumeration();
 	vEnum.nextElement(); // skip root
+>>>>>>> .r71
 	while (vEnum.hasMoreElements()) {
 	    vNode = (DefaultMutableTreeNode) vEnum.nextElement();
 	    vAcct = (Account) vNode.getUserObject();
@@ -200,11 +212,18 @@ public class GeneralLedgerView extends JPanel implements Observer {
 
 	int vNew = pNew;
 	if (pNew != -1) {
+<<<<<<< .mine
+		if (pColIndex == 0) {
+		    vNew = accountDescriptionsView.getSelectedIndex();
+		} else if (pColIndex == 1) {
+		    vNew = accountBalancesView.getSelectedIndex();
+		}
+=======
 	    if (pColIndex == 0) {
 		vNew = accountDescriptionsView.getSelectedIndex();
 	    } else if (pColIndex == 1) {
 		vNew = accountBalancesView.getSelectedIndex();
-	    }
+>>>>>>> .r71
 
 	    selectAccountNamesRow(vNew);
 	    selectAccountMetaDatasRow(vNew, pColIndex);
@@ -254,14 +273,27 @@ public class GeneralLedgerView extends JPanel implements Observer {
     }
 
     private void accountNamesNodeWillCollapse(TreePath pPath) {
+<<<<<<< .mine
 	int vCt = accountNamesView.getModel().getChildCount(pPath.getLastPathComponent());
 	int vRow = accountNamesView.getRowForPath(pPath);
 
 	for (int i = 1; i <= vCt; i++) {
 	    accountDescriptionsView.fakeHideElementAt(vRow + i);
 	    accountBalancesView.fakeHideElementAt(vRow + i);
+    }
+=======
+	int vCt = accountNamesView.getModel().getChildCount(pPath.getLastPathComponent());
+	int vRow = accountNamesView.getRowForPath(pPath);
+>>>>>>> .r71
+
+<<<<<<< .mine
+=======
+	for (int i = 1; i <= vCt; i++) {
+	    accountDescriptionsView.fakeHideElementAt(vRow + i);
+	    accountBalancesView.fakeHideElementAt(vRow + i);
 	}
 
+>>>>>>> .r71
 	if (accountNamesView.isSelectionEmpty()) {
 	    selectAccountMetaDatasRow(-1, -1);
 	    controller.noAccountSelected();
@@ -345,6 +377,7 @@ public class GeneralLedgerView extends JPanel implements Observer {
 	    }
 	}
 
+<<<<<<< .mine
 	/*private class AccountNamesViewCellRenderer extends JPanel implements TreeCellRenderer {
 	private JLabel nameField;
 
@@ -361,8 +394,13 @@ public class GeneralLedgerView extends JPanel implements Observer {
 	add(nameField, BorderLayout.WEST);
 	add(descriptionField, BorderLayout.CENTER);
 	add(balanceField, BorderLayout.EAST);
-	}
+    }
+=======
+	/*private class AccountNamesViewCellRenderer extends JPanel implements TreeCellRenderer {
+	private JLabel nameField;
+>>>>>>> .r71
 
+<<<<<<< .mine
 	public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
 	if (selected) {
 	setBackground(Color.BLUE);
@@ -372,7 +410,78 @@ public class GeneralLedgerView extends JPanel implements Observer {
 	String vName;
 	String vDescription;
 	String vBalance;
+=======
+	private JLabel descriptionField;
+>>>>>>> .r71
 
+<<<<<<< .mine
+	DefaultMutableTreeNode vNode = (DefaultMutableTreeNode) value;
+	try {
+	Account vAcct = (Account) vNode.getUserObject();
+	vName = vAcct.getName();
+	vDescription = vAcct.getDescription();
+	vBalance = ""+vAcct.getBalance();
+	} catch (ClassCastException vEx) {
+	try {
+	String[] vHeaders = (String[]) vNode.getUserObject();
+	vName = vHeaders[0];
+	vDescription = vHeaders[1];
+	vBalance = vHeaders[2];
+	} catch (ClassCastException vEx2) {
+	vName = vNode.getUserObject().toString();
+	vDescription = vName;
+	vBalance = vName;
+	}
+	}
+=======
+	private JLabel balanceField;
+>>>>>>> .r71
+
+<<<<<<< .mine
+	nameField.setText(vName);
+	descriptionField.setText(vDescription);
+	balanceField.setText(vBalance);
+=======
+	public AccountNamesViewCellRenderer() {
+	nameField = new JLabel();
+	descriptionField = new JLabel();
+	balanceField = new JLabel();
+>>>>>>> .r71
+
+<<<<<<< .mine
+	return this;
+	}
+=======
+	setLayout(new BorderLayout());
+	add(nameField, BorderLayout.WEST);
+	add(descriptionField, BorderLayout.CENTER);
+	add(balanceField, BorderLayout.EAST);
+	}
+>>>>>>> .r71
+
+<<<<<<< .mine
+	}*/
+    }
+=======
+	public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+	if (selected) {
+	setBackground(Color.BLUE);
+	} else {
+	setBackground(Color.white);
+	}
+	String vName;
+	String vDescription;
+	String vBalance;
+>>>>>>> .r71
+
+<<<<<<< .mine
+    private class AccountMetaDatasView extends JList implements ListSelectionListener {
+
+	private int colIndex;
+	private ListModel nonMutableModel;
+
+	public AccountMetaDatasView(int pColIndex, ListModel pMetaDatas, ListModel pNonMutableModel) {
+=======
 	DefaultMutableTreeNode vNode = (DefaultMutableTreeNode) value;
 	try {
 	Account vAcct = (Account) vNode.getUserObject();
@@ -408,6 +517,7 @@ public class GeneralLedgerView extends JPanel implements Observer {
 	private ListModel nonMutableModel;
 
 	public AccountMetaDatasView(int pColIndex, ListModel pMetaDatas, ListModel pNonMutableModel) {
+>>>>>>> .r71
 	    super(pMetaDatas);
 	    addListSelectionListener(this);
 	    setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -430,10 +540,18 @@ public class GeneralLedgerView extends JPanel implements Observer {
 	    vData.insertElementAt(nonMutableModel.getElementAt(pRow), pRow);
 	}
 
+<<<<<<< .mine
+	/*private class AccountMetaDatasViewCellRenderer extends DefaultListCellRenderer {
+	public AccountMetaDatasViewCellRenderer() {
+	//setVisible(false);
+=======
 	/*private class AccountMetaDatasViewCellRenderer extends DefaultListCellRenderer {
 	public AccountMetaDatasViewCellRenderer() {
 	//setVisible(false);
 	}
 	}*/
+>>>>>>> .r71
     }
+	}*/
+}
 }

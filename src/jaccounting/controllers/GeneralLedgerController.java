@@ -69,13 +69,24 @@ public class GeneralLedgerController extends BaseController {
 	JTabbedPane vTabsCont = JAccounting.getApplication().getView().getTabsContainer();
 	int vIndex = vTabsCont.indexOfTab(vRmap.getString("title"));
 
+<<<<<<< .mine
+	if (vIndex != -1) {
+	    return (GeneralLedgerView) vTabsCont.getComponentAt(vIndex);
+=======
 	if (vIndex != -1) {
 	    return (GeneralLedgerView) vTabsCont.getComponentAt(vIndex);
 	}
 
 	return null;
+>>>>>>> .r71
     }
 
+<<<<<<< .mine
+	return null;
+    }
+
+=======
+>>>>>>> .r71
     public void openGeneralLedger() {
 	ResourceMap vRmap = JAccounting.getApplication().getContext().getResourceMap(GeneralLedgerView.class);
 	GeneralLedger vModel = getModel();
@@ -124,10 +135,15 @@ public class GeneralLedgerController extends BaseController {
 	    vBox.initFormFields();
 
 	    JAccounting.getApplication().show(vBox);
+<<<<<<< .mine
 	} catch (GenericException ex) {
 	    Logger.getLogger(GeneralLedgerController.class.getName()).log(Level.SEVERE, null, ex);
+	} 
+=======
+	} catch (GenericException ex) {
+	    Logger.getLogger(GeneralLedgerController.class.getName()).log(Level.SEVERE, null, ex);
+>>>>>>> .r71
 	}
-    }
 
     @Action(enabledProperty = "openEditAccountBoxEnabled")
     public void openEditAccountBox() {
@@ -197,8 +213,13 @@ public class GeneralLedgerController extends BaseController {
 
 	    if (vErrors.isEmpty()) {
 		// attempt to update account from modify box field values
+<<<<<<< .mine
+		vErrors = vAcct.updateProperties(vNumber, vBox.getNameTextField().getText(),
+					vBox.getDescriptionTextField().getText());
+=======
 		vErrors = vAcct.updateProperties(vNumber, vBox.getNameTextField().getText(),
 			vBox.getDescriptionTextField().getText());
+>>>>>>> .r71
 	    }
 
 	    if (vErrors.isEmpty()) {
