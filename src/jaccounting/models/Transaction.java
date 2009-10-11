@@ -89,7 +89,6 @@ public class Transaction extends BaseModel {
 	this(date, refNo, memo, amount,
 		new TransactionEntry(null, null, TransactionEntry.Type.DEBIT, 0.0),
 		new TransactionEntry(null, null, TransactionEntry.Type.CREDIT, 0.0));
->>>>>>> .r71
     }
 
     /**
@@ -380,7 +379,6 @@ public class Transaction extends BaseModel {
 	if (!debitAccount.isTransactionsEnabled()) rErrors.put("debitAccount", ErrorCode.NOT_TRANSACTIONNABLE_ACCOUNT);
 	if (!creditAccount.isTransactionsEnabled()) rErrors.put("creditAccount", ErrorCode.NOT_TRANSACTIONNABLE_ACCOUNT);
 	
->>>>>>> .r71
 	return rErrors;
     }
  

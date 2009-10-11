@@ -45,7 +45,6 @@ public class LiabilityAccount extends Account {
     public LiabilityAccount() {
 	super();
 	type = Type.LIABILITY;
->>>>>>> .r71
     }
 
     /**
@@ -97,9 +96,6 @@ public class LiabilityAccount extends Account {
      * @param pAmount		    the amount to apply as a Debit
      * @since			    1.0.0
      */
-=======
-    @Override
->>>>>>> .r71
     protected void applyDebit(double pAmount) {
 	balance -= pAmount;
     }

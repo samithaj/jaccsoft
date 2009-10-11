@@ -268,7 +268,6 @@ public class PersistenceHandler {
 		 * add it to the idAccounts map and stop when we found the Account
 		 * matching our pId.
 		 */
->>>>>>> .r71
 		try {
 		    rAcct = Account.createAccount(vNumber, vName, vDescription, vBalance,
 						 vType, vEntries, vTransEnabled);
@@ -280,6 +279,8 @@ public class PersistenceHandler {
 		}
 	    }
 
+	}
+	
 	return rAcct;
     }
 
@@ -443,7 +444,6 @@ public class PersistenceHandler {
 		rEntry = new TransactionEntry(null, null, Enum.valueOf(TransactionEntry.Type.class,
 									vEl.getChildTextTrim("Enum")),
 						Double.parseDouble(vEl.getChildTextTrim("double")));
->>>>>>> .r71
 		idTransactionEntries.put(vId, rEntry);
 		//transactionEntryIds.put(rEntry, vId);
 		if (vId.equals(pId)) vStop = true;
@@ -504,7 +504,6 @@ public class PersistenceHandler {
 		.reportUsingKey("messages.unserializingData");
 	    Document vDoc = vBuilder.build(pStream);
 	    Element vRoot = vDoc.getRootElement();
->>>>>>> .r71
 
 	    accountElementsIterator = vRoot.getDescendants(new ElementFilter("Account"));
 	    transactionElementsIterator = vRoot.getDescendants(new ElementFilter("Transaction"));

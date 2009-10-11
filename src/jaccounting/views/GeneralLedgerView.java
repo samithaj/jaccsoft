@@ -171,7 +171,6 @@ public class GeneralLedgerView extends JPanel implements Observer {
 
 	rList.addElement(" ");		// root equivalent
 	vEnum.nextElement();		// skip root
->>>>>>> .r71
 	while (vEnum.hasMoreElements()) {
 	    vNode = (DefaultMutableTreeNode) vEnum.nextElement();
 	    vAcct = (Account) vNode.getUserObject();
@@ -191,7 +190,6 @@ public class GeneralLedgerView extends JPanel implements Observer {
 
 	rList.addElement(" ");		// root equivalent
 	vEnum.nextElement();		// skip root
->>>>>>> .r71
 	while (vEnum.hasMoreElements()) {
 	    vNode = (DefaultMutableTreeNode) vEnum.nextElement();
 	    vAcct = (Account) vNode.getUserObject();
@@ -283,7 +281,7 @@ public class GeneralLedgerView extends JPanel implements Observer {
 		} else if (pColIndex == 1) {
 		    vNew = accountBalancesView.getSelectedIndex();
 		}
->>>>>>> .r71
+	    }
 
 	    /** selects the names tree at the selected index */
 	    selectAccountNamesRow(vNew);
@@ -358,7 +356,6 @@ public class GeneralLedgerView extends JPanel implements Observer {
 	 * except check to see if the node collapse resulted in a selection
 	 * clearance that we did not catch
 	 */
->>>>>>> .r71
 	if (accountNamesView.isSelectionEmpty()) {
 	    selectAccountMetaDatasRow(-1, -1);
 	    controller.noAccountSelected();
@@ -567,14 +564,9 @@ public class GeneralLedgerView extends JPanel implements Observer {
 	String vName;
 	String vDescription;
 	String vBalance;
-=======
-	private JLabel descriptionField;
->>>>>>> .r71
 
->>>>>>> .r71
 
 	private AccountMetaDatasView(int pColIndex, DefaultListModel pMetaDatas, DefaultListModel pNonMutableModel) {
->>>>>>> .r71
 	    super(pMetaDatas);
 	    addListSelectionListener(this);
 	    setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -596,7 +588,6 @@ public class GeneralLedgerView extends JPanel implements Observer {
 	    vData.add(pRow, nonMutableModel.get(pRealPos));
 	}
 
->>>>>>> .r71
     }
-	}*/
+    
 }

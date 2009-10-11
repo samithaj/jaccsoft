@@ -94,10 +94,6 @@ public class MainView extends FrameView implements ChangeListener, Observer {
 	journalToolsBar.setVisible(false);
 	tabsContainer.addChangeListener(this);
 	
->>>>>>> .r71
-<<<<<<< .mine
-	// status bar initialization - message timeout, idle icon and busy animation, etc
-=======
         ResourceMap resourceMap = getResourceMap();
 	resourceMap.injectComponents(getComponent());
 	// status bar initialization - message timeout, idle icon and busy animation, etc
@@ -590,99 +586,5 @@ public class MainView extends FrameView implements ChangeListener, Observer {
     private javax.swing.JTabbedPane tabsContainer;
     // End of variables declaration//GEN-END:variables
 
->>>>>>> .r71
 }
-
-    public JToolBar getGeneralLedgerToolsBar() {
-        return generalLedgerToolsBar;
-    }
-
-    public JToolBar getJournalToolsBar() {
-	return journalToolsBar;
-    }
-
-    public ModifyAccountBox getModifyAccountBox() {
-        return modifyAccountBox;
-    }
-
-    public void setModifyAccountBox(ModifyAccountBox modifyAccountBox) {
-        this.modifyAccountBox = modifyAccountBox;
-    }
-
-    public ModifyTransactionBox getModifyTransactionBox() {
-	return modifyTransactionBox;
-    }
-
-    public void setModifyTransactionBox(ModifyTransactionBox modifyTransactionBox) {
-	this.modifyTransactionBox = modifyTransactionBox;
-    }
-
-    public boolean showConfirmActionBox(Object pMessage) {
-	ResourceMap vRmap = JAccounting.getApplication().getContext().getResourceMap(this.getClass());
-	String vTitle = vRmap.getString("confirmActionBox.title");
-	initConfirmActionBox(pMessage);
-	return showOptionDialog(confirmActionBox, vTitle) == JOptionPane.OK_OPTION ? true : false;
-    }
-
-    public void showUserMessageBox(Object pMessage, int pMessageType, int pOptionType, Object[] pOptions) {
-	ResourceMap vRmap = JAccounting.getApplication().getContext().getResourceMap(this.getClass());
-	String vTitle = vRmap.getString("userMessageBox.title");
-	initUserMessageBox(pMessage);
-	showOptionDialog(userMessageBox, vTitle);
-    }
-
-    private void initConfirmActionBox(Object pMessage) {
-	confirmActionBox = new JOptionPane(pMessage, JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
-    }
-
-    private void initUserMessageBox(Object pMessage) {
-	userMessageBox = new JOptionPane(pMessage, JOptionPane.INFORMATION_MESSAGE, JOptionPane.OK_OPTION);
-    }
-
-    private int showOptionDialog(JOptionPane pPane, String pTitle) {
-	JDialog vDialog = pPane.createDialog(pTitle);
-	vDialog.show();
-	Object rVal = pPane.getValue();
-	return (rVal == null) ? JOptionPane.CLOSED_OPTION :
-	    (rVal instanceof Integer ? ((Integer)rVal).intValue() : JOptionPane.CLOSED_OPTION);
-    }
-
-    public void stateChanged(ChangeEvent e) {
-	if (((JTabbedPane)e.getSource()).equals(tabsContainer)) {
-	    tabsContainerStateChanged();
-	}
-    }
-
-    private void tabsContainerStateChanged() {
-	int vIndex = tabsContainer.getSelectedIndex();
-	if (vIndex != -1) {
-	    MainController.getInstance().tabSelected(vIndex);
-	} else {
-	    MainController.getInstance().noTabSelected();
-	}
-    }
-
-    public void newDataLoaded() {
-	tabsContainer.removeAll();
-	JAccounting.getApplication().getModelsMngr().getData()
-		    .getGeneralLedger().addObserver(this);
-    }
-
-    public void update(Observable o, Object arg) {
-	if (o instanceof GeneralLedger) {
-	    int vIndex = tabsContainer.getTabCount() -1;
-	    // close tabs of deleted accounts
-	    while (vIndex > 1) {
-		if (((GeneralLedger) o).getAccount(tabsContainer.getToolTipTextAt(vIndex)) == null) {
-		    tabsContainer.remove(vIndex);
-		    vIndex--;
-		}
-		vIndex--;
-	    }
-	}
-    }
-
-    public void closeCurrentTab() {
-	tabsContainer.remove(tabsContainer.getSelectedIndex());
-    }
 

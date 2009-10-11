@@ -23,7 +23,6 @@ package jaccounting.controllers;
 
 import jaccounting.JAccounting;
 import jaccounting.ErrorCode;
-import jaccounting.GenericException;
 import jaccounting.models.Account;
 import jaccounting.models.Journal;
 import jaccounting.models.Transaction;
@@ -109,15 +108,10 @@ public class JournalController extends BaseController {
 	int vIndex = vTabsCont.indexOfTab(vRmap.getString("title"));
 
 	return (vIndex != -1) ? (JournalView) vTabsCont.getComponentAt(vIndex) : null;
->>>>>>> .r71
     }
 
     private ModifyTransactionBox getOrCreateModifyTransactionBox() {
 	ModifyTransactionBox rBox = JAccounting.getApplication().getMainView().getModifyTransactionBox();
->>>>>>> .r71
-
-    protected ModifyTransactionBox getOrCreateModifyTransactionBox() {
-	ModifyTransactionBox rBox = JAccounting.getApplication().getView().getModifyTransactionBox();
 
 	if (rBox == null) {
 	    rBox = new ModifyTransactionBox(JAccounting.getApplication().getMainFrame(), this);
@@ -306,7 +300,6 @@ public class JournalController extends BaseController {
 						vBox.getRefNoInput().getText(),
 						vBox.getMemoInput().getText(),
 						vAmount, vDebitAccount, vCreditAccount);
->>>>>>> .r71
 	    }
 
 	    if (vErrors.isEmpty()) {

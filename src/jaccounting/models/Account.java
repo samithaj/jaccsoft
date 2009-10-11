@@ -216,7 +216,6 @@ public abstract class Account extends BaseModel {
     public static Account createAccount(int number, String name, String description,
 		double balance, Type type, List<TransactionEntry> entries,
 		boolean allowTransactions) throws InvalidAccountTypeException {
->>>>>>> .r71
 	Account rAccount = null;
 
 	switch (type) {
