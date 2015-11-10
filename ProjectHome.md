@@ -1,0 +1,1 @@
+JAccounting is a double entry accounting program written in Java that aims to be simple to use for accounting savvies.
