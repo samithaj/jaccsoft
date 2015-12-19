@@ -25,6 +25,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigInteger;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
@@ -32,6 +35,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Locale;
 import java.util.Map;
 import javax.swing.tree.DefaultMutableTreeNode;
 import org.jdom.Document;
@@ -374,7 +378,28 @@ public class PersistenceHandler {
 		    vKidName = vKid.getAttributeValue("name");
 		    vText = vKid.getTextTrim();
 		    if (vKidName.equals("date")) {
-			vDate = new Date(vText);
+			// System.out.println("gg"+vText);
+                        
+                        
+                        
+                        
+                        String target = "Thu Sep 28 20:29:30 JST 2000";
+                        DateFormat df = new SimpleDateFormat("EEE MMM dd kk:mm:ss z yyyy", Locale.ENGLISH);
+                        try {
+                            Date result = df.parse(vText);
+                             //System.out.println(result);
+                             vDate = result;
+                        } catch (ParseException e) {
+
+                            e.printStackTrace();
+                        }
+                       
+                        //vDate = new Date(vText);
+
+
+     //other methods
+
+                       
 		    }
 		    else if (vKidName.equals("refNo")) {
 			vRefNo = vText;
